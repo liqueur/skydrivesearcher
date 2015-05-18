@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>网盘搜索</title>
+  <link rel="stylesheet" href="{{ static_url('bootstrap/css/bootstrap.min.css') }}">
+  <script src="{{ static_url('script/jquery.min.js') }}"></script>
+  <script src="{{ static_url('bootstrap/js/bootstrap.min.js') }}"></script>
+</head>
+<body>
+  <div class="center-block clearfix" style="width:35%;padding-top:70px;">
+    <h3 style="color:#666">网盘搜索(๑•̀ㅂ•́)و✧</h3>
+    <h5 style="color:#ccc">今日新增 2500 个资源</h5>
+    <form method="POST" action="/result">
+      <div class="form-group input-group">
+        <input class="form-control" type="text" name="query">
+        <span class="input-group-btn">
+          <button class="btn btn-default" type="submit">搜索</button>
+        </span>
+      </div>
+    </form>
+  </div>
+</body>
+</html>

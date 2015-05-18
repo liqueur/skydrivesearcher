@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="{{ static_url('bootstrap/css/bootstrap.min.css') }}">
+    <script src="{{ static_url('script/jquery.min.js') }}"></script>
+    <script src="{{ static_url('bootstrap/js/bootstrap.min.js') }}"></script>
+  </head>
+  <style>
+    .highlight {
+      color: #f00;
+    }
+
+    #result-list li {
+      padding-bottom: 15px;
+    }
+  </style>
+  <body style="overflow-x:hidden;">
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <a class="navbar-brand" href="/">网盘搜索(๑•̀ㅂ•́)و✧</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <form class="navbar-form navbar-left" role="search" action="" method="POST">
+            <div class="form-group">
+              <input name="query" type="text" class="form-control" value="{{ query }}" style="width:300px;">
+            </div>
+            <button type="submit" class="btn btn-default">搜索</button>
+          </form>
+        </div><!-- /.navbar-collapse -->
+      </div><!-- /.container-fluid -->
+    </nav>
+    <ul id="result-list" class="list-unstyled" style="padding-left:100px;">
+      <li>
+        <span class="text-muted">搜索耗时 {{ cost_time }}</span>
+      </li>
+      {% for item in items %}
+      <li>
+        <h4><a href="{{ item['url'] }}" target="_blank">{% raw item['title'] %}</a></h4>
+        <span class="" style="color:#ccc">{{ strftime('%Y-%m-%d %H:%M:%S', localtime(item['time'])) }}</span>
+      </li>
+      {% end %}
+      {% if len(items) == 0 %}
+      <li>
+        <h4 style="color:#333">没有找到资源Σ(っ °Д °;)っ</h4>
+        <ul>
+          <li>增加关键字，不要使用单字搜索</li>
+          <li><a href="">投诉作者凸(艹皿艹 )</a></li>
+        </ul>
+      </li>
+      {% end %}
+    </ul>
+  </body>
+</html>
