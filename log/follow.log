@@ -1,0 +1,471 @@
+2015-05-24 19:18:11,073 [follow.py:101] DEBUG 0
+2015-05-24 19:18:11,077 [follow.py:101] DEBUG 0
+2015-05-24 19:18:11,081 [follow.py:101] DEBUG 0
+2015-05-24 19:18:11,210 [follow.py:101] DEBUG 6
+2015-05-24 19:18:11,308 [follow.py:101] DEBUG 49
+2015-05-24 19:18:12,450 [follow.py:101] DEBUG 39
+2015-05-24 19:18:13,342 [follow.py:101] DEBUG 299
+2015-05-24 19:18:13,470 [follow.py:101] DEBUG 37
+2015-05-24 19:18:14,083 [follow.py:101] DEBUG 10
+2015-05-24 19:18:14,084 [follow.py:41] DEBUG total success: 9
+2015-05-24 19:18:14,085 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:14,298 [follow.py:66] DEBUG [4080815635, 3912711724, 2636858560, 2719056429, 1059806729, 1580391795]
+2015-05-24 19:18:14,372 [follow.py:66] DEBUG [1180121493, 4063743357, 1326415654, 170160302, 608240440, 876304136, 3007624685, 523271195, 3825965179, 338919181]
+2015-05-24 19:18:14,429 [follow.py:66] DEBUG [3189004793, 53561478, 657485367, 3643760757, 2469157423, 4096827176, 3291415467, 4080012339, 3037190414, 1293993914, 740332826, 1828982259, 1025710192, 4077152221, 908233900, 4147176078, 2285238882, 3492591982, 708249947, 1980714964, 639627188, 252324851, 906082835, 3962892461]
+2015-05-24 19:18:14,489 [follow.py:66] DEBUG [3791923799]
+2015-05-24 19:18:14,502 [follow.py:66] DEBUG [657010271, 3627270537, 302006100, 1110386084, 2602008609, 1781607268, 2619463804, 420218046, 1258793634, 4164399535, 2904897917, 70583170, 4113255477]
+2015-05-24 19:18:14,507 [follow.py:66] DEBUG [3475534808, 221966752, 491042107, 1913730813, 1798788396, 990878489, 1631011153, 4111595231, 1882483976, 3375832228, 791448935, 4278581020, 2821042399, 2080785310, 53993635, 2838601171, 3577130558, 1949795117, 436762703, 2147543332, 3560378414, 1647570974, 372502763, 2720577057]
+2015-05-24 19:18:14,635 [follow.py:66] DEBUG [202355615, 4029371074, 789166813, 4264553589, 3509055772, 671818910, 2084017595, 1681054822, 621249402, 2536939527, 2854108537, 656966008, 1663211990, 3945010536, 2936515086, 1426993171, 2585249162, 1211988088, 3073458326, 1914736275, 440698068, 2402141797, 1932888256, 590319526]
+2015-05-24 19:18:15,488 [follow.py:66] DEBUG [2569240236, 2148090250, 3087096136, 3355732434, 1426082319, 2083664161, 3624516574, 3222773376, 1714862023, 520403662, 3590614487, 439634242, 2687770522, 1241527836, 976389001, 1915683229, 2852162008, 1996550914, 1714768163, 1108768168, 738693054, 2587261895, 1077212075, 906407403]
+2015-05-24 19:18:18,573 [follow.py:66] DEBUG [338971890, 1023460984, 3728148270, 2637404767, 3221758573, 2218256685, 3023206453, 740332826, 3138592836, 2636867889, 990279124, 704929685, 1864132730, 3038962818, 1395711500]
+2015-05-24 19:18:19,413 [follow.py:66] DEBUG [1583340878, 3022836519, 2470854488, 3525617977, 1850605932, 1764676961, 3980246054, 386669035, 3660976909, 3862293523, 3090197518, 2869789857, 3926717245, 506439803, 1494856764, 640266013, 940014776, 3827660033, 1510067332, 4228033607, 406143590, 3158078488, 1157729627, 1362046287]
+2015-05-24 19:18:19,414 [follow.py:41] DEBUG total success: 10
+2015-05-24 19:18:19,414 [follow.py:42] DEBUG total failure: 12
+2015-05-24 19:18:19,414 [follow.py:51] DEBUG repeat
+2015-05-24 19:18:19,672 [follow.py:66] DEBUG [1365129, 2368565636, 3624151571, 4043706052, 3859463869, 2569666980, 151435325, 1345010571, 3809476486, 2147684939, 2567734162, 254034999, 3860886991, 2416457930, 2485166979, 1981785566, 2268579154, 2050019436, 2636858560, 2988459501, 4144794311, 1477190803, 3457956649, 1174767099]
+2015-05-24 19:18:19,685 [follow.py:66] DEBUG [3207280216, 1462235039, 1966092431, 2435950334, 2653740545, 455714342, 1026545599, 2954262429, 3492479396, 470669705, 117706889, 3373194590, 1714795478, 1848234242, 2519641571, 2871717744, 3593505105, 4262273220, 1728704442, 487408086, 2232456774, 3692881668, 3827247390, 2284265321]
+2015-05-24 19:18:19,726 [follow.py:66] DEBUG [3089496569, 3458913532, 3291337026, 1813824378, 4247478669, 624266882, 1664064950, 2250979227, 2519284287, 1060023007, 1244099474, 4246692722, 1545862033, 1479908803, 3375055169, 3138592836, 1831619720, 3842367522, 4264591577, 1614121541, 4211655700, 1194327518, 3271759362, 2922467006]
+2015-05-24 19:18:19,735 [follow.py:66] DEBUG [3827062481, 3221713754, 1041079305, 286012400, 2685389600, 1829277583, 973536426, 3137711995, 1260264262, 2768472481, 4010094920, 3389093651, 3525617977, 1394033663, 3861904240, 1376969744, 2738313168, 371236653, 2735704092, 386587081, 2248707148, 2804376823, 556731501, 3037222610]
+2015-05-24 19:18:19,744 [follow.py:66] DEBUG [4214723491, 1847849303, 1782044103, 3171897279, 1258995842, 472637532, 3627504940, 287945060, 3744964652, 1530366115, 3493280302, 3392633902, 137867051, 104276525, 540511906, 1027035554, 87497890, 2083903064, 772161729, 708312363, 4129025206, 1228255694, 4010064038, 372203119]
+2015-05-24 19:18:19,748 [follow.py:66] DEBUG [3090645548, 2086873, 4046951470, 2989321065, 4248058874, 2986611120, 4197775610, 1966581154, 3455993, 4264834298, 990878489, 20249593, 1295510178, 3912711724, 1798788396, 3661074988, 2550292231, 1832385835, 1563195465, 839406307, 2449513440, 3677167435, 2335512461, 3778313100]
+2015-05-24 19:18:19,752 [follow.py:66] DEBUG [892398881, 3792475903, 4011655135, 1613808169, 4163435515, 436751272, 3476068601, 1395620206, 2536854865, 3590981241, 3708205457, 1528087287, 1513093517, 1613816812, 3473485458, 353412381, 2469865209, 976248929, 2132859131, 3173864776, 4011635155, 4263559880, 2248591151, 489760155]
+2015-05-24 19:18:19,904 [follow.py:66] DEBUG [1060600830, 3691288441, 137306991, 4163581050, 137172738, 3811547187, 2718733743, 3140358427, 3558428441, 4228292336, 4062736046, 2097313421, 1376323702, 1462703736, 1191404666, 3442894111, 87352415, 2081352409, 4280637689, 1361583665, 3174032502, 4263605379, 3406093811, 2214716156]
+2015-05-24 19:18:20,606 [follow.py:66] DEBUG [588345065, 772101459, 2066615174, 1009733481, 103343628, 3057112592, 221730162, 1110084621, 3506621233, 707812491, 271657707, 2838615016, 254831542, 1764847098, 1881280208, 1831298906, 2687885695, 3792872147, 1762131113, 53863755, 339045189, 2301478148, 2771763071, 739395834]
+2015-05-24 19:18:20,658 [follow.py:66] DEBUG [4026774036, 171423531, 3996642348, 1428919760, 2047409015, 808724568, 875534448, 1293124599, 3172540305, 1946547680, 1329012525, 1815067503, 2769815989, 53993635, 1762505975, 4264906515, 2805301523, 640672929, 1544575534, 1594589124, 2114211477, 169496023, 990279124, 2016780596]
+2015-05-24 19:18:20,659 [follow.py:41] DEBUG total success: 20
+2015-05-24 19:18:20,659 [follow.py:42] DEBUG total failure: 2
+2015-05-24 19:18:20,660 [follow.py:51] DEBUG repeat
+2015-05-24 19:18:20,975 [follow.py:66] DEBUG [605618656, 3895770896, 2738326316, 1362602795, 1949795117, 2100777771, 2218256685, 2367035611, 1832355372, 2819032915, 704929685, 402766185, 3375832228, 2418997073, 3878415208, 2636867889, 2050437676, 573569204, 587342122, 523185076, 3308210865, 1244524472, 439346356, 2100294324]
+2015-05-24 19:18:24,169 [follow.py:66] DEBUG [2301587892, 2150602932, 271528372, 1647262388, 1898912436, 1764713652, 2049933236, 1831824052, 3560378414, 2671209892, 3728148270]
+2015-05-24 19:18:24,170 [follow.py:41] DEBUG total success: 22
+2015-05-24 19:18:24,171 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:24,311 [follow.py:101] DEBUG 0
+2015-05-24 19:18:24,317 [follow.py:101] DEBUG 0
+2015-05-24 19:18:24,322 [follow.py:101] DEBUG 0
+2015-05-24 19:18:24,334 [follow.py:101] DEBUG 0
+2015-05-24 19:18:24,404 [follow.py:101] DEBUG 10
+2015-05-24 19:18:24,412 [follow.py:101] DEBUG 8
+2015-05-24 19:18:24,456 [follow.py:101] DEBUG 8
+2015-05-24 19:18:24,467 [follow.py:101] DEBUG 11
+2015-05-24 19:18:24,685 [follow.py:101] DEBUG 4
+2015-05-24 19:18:24,853 [follow.py:101] DEBUG 2
+2015-05-24 19:18:24,854 [follow.py:41] DEBUG total success: 10
+2015-05-24 19:18:24,854 [follow.py:42] DEBUG total failure: 3
+2015-05-24 19:18:24,855 [follow.py:51] DEBUG repeat
+2015-05-24 19:18:24,986 [follow.py:101] DEBUG 0
+2015-05-24 19:18:24,988 [follow.py:101] DEBUG 0
+2015-05-24 19:18:25,053 [follow.py:101] DEBUG 2
+2015-05-24 19:18:25,054 [follow.py:41] DEBUG total success: 13
+2015-05-24 19:18:25,054 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:25,275 [follow.py:66] DEBUG [1461076410, 186587123]
+2015-05-24 19:18:25,281 [follow.py:66] DEBUG [1493178887, 3392378441, 1597968209, 2283179211, 2804940801, 4113199795, 3138386388, 3322923457]
+2015-05-24 19:18:25,291 [follow.py:66] DEBUG [2114030252, 3358556526, 3308235630, 3308205678]
+2015-05-24 19:18:25,296 [follow.py:66] DEBUG [1244099474, 3087096508, 2569199502, 2586517790, 1445913340, 3124509720, 2250819416, 3912711724, 1798788396, 1295510178, 1059806729]
+2015-05-24 19:18:25,609 [follow.py:66] DEBUG [1144851503, 2654853352]
+2015-05-24 19:18:25,617 [follow.py:66] DEBUG [422584089, 4080794744, 285488552, 302782686, 1144937261, 1879474161, 1059806729, 1295510178, 53993635, 520102869]
+2015-05-24 19:18:28,404 [follow.py:66] DEBUG [70188401, 3076275776, 4262273220, 1445018439, 3375832228, 2684993178, 2117359211, 1043438071]
+2015-05-24 19:18:28,405 [follow.py:41] DEBUG total success: 7
+2015-05-24 19:18:28,406 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:28,597 [follow.py:101] DEBUG 1
+2015-05-24 19:18:29,540 [follow.py:101] DEBUG 25
+2015-05-24 19:18:29,541 [follow.py:41] DEBUG total success: 2
+2015-05-24 19:18:29,542 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:29,717 [follow.py:66] DEBUG [3575788406]
+2015-05-24 19:18:29,784 [follow.py:66] DEBUG [3090251190]
+2015-05-24 19:18:29,909 [follow.py:66] DEBUG [2671045927, 1764629622, 2604486464, 1191767443, 2114351234, 1579948700, 3053922762, 3473248472, 3003386927, 2334916426, 1949795117, 2671209892, 3728148270, 1295510178, 4046951470, 3490106602, 204960419, 4080204509, 3375467638, 3291077, 3375832228, 2838601171, 3577130558, 792127083]
+2015-05-24 19:18:29,909 [follow.py:41] DEBUG total success: 3
+2015-05-24 19:18:29,910 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:30,189 [follow.py:101] DEBUG 69
+2015-05-24 19:18:30,789 [follow.py:101] DEBUG 41
+2015-05-24 19:18:30,789 [follow.py:41] DEBUG total success: 2
+2015-05-24 19:18:30,789 [follow.py:42] DEBUG total failure: 14
+2015-05-24 19:18:30,790 [follow.py:51] DEBUG repeat
+2015-05-24 19:18:31,119 [follow.py:41] DEBUG total success: 2
+2015-05-24 19:18:31,119 [follow.py:42] DEBUG total failure: 4
+2015-05-24 19:18:31,119 [follow.py:51] DEBUG repeat
+2015-05-24 19:18:31,250 [follow.py:41] DEBUG total success: 2
+2015-05-24 19:18:31,250 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,381 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,382 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,382 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,383 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,383 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,384 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,384 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,385 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,385 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,385 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,386 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,387 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,387 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,388 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,388 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,388 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,389 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,389 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,389 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,389 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,390 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,390 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,392 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,392 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,393 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,393 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,393 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,393 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,394 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,394 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,394 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,394 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,394 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,395 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,395 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,395 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,395 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,395 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,396 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,396 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,396 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,396 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,397 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,397 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,397 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,397 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,397 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,398 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,398 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,398 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,398 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,398 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,399 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,399 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,399 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,399 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,400 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,401 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,401 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,401 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,403 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,403 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,403 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,403 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,404 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,404 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,404 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,404 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,404 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,405 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,405 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,405 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,405 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,406 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,406 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,406 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,406 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,406 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,407 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,407 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,407 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,407 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,407 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,408 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,408 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,408 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,408 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,409 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,409 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,409 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,410 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,410 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,413 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,416 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,416 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,416 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,417 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,417 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,417 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,417 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,418 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,418 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,418 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,419 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,419 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,419 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,420 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,420 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,420 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,420 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,421 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,421 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,421 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,421 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,422 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,422 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,422 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,422 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,422 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,423 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,423 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,423 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,423 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,424 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,424 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,424 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,424 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,425 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,425 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,425 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,425 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,425 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,426 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,426 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,426 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,427 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,427 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,428 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,428 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,428 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,428 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,429 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,429 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,429 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,429 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,430 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,430 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,430 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,430 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,430 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,431 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,431 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,431 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,431 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,432 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,432 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,432 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,432 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,433 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,433 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,433 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,433 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,434 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,434 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,434 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,434 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,435 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,435 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,435 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,435 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,436 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,436 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,436 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,436 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,437 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,437 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,437 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,437 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,438 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,438 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,438 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,438 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,438 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,439 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,439 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,440 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,440 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,441 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,441 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,441 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,441 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,442 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,442 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,442 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,442 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,442 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,443 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,443 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,443 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,443 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,443 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,444 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,444 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,444 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,444 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,444 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,445 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,445 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,445 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,445 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,445 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,445 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,446 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,446 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,446 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,446 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,446 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,447 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,447 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,447 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,447 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,447 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,448 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,448 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,448 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,448 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,448 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,449 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,449 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,449 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,450 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,450 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,450 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,450 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,450 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,451 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,451 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,451 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,451 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,452 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,452 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,452 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,452 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,452 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,452 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,453 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,453 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,453 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,453 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,454 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,454 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,454 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,454 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,455 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,455 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,455 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,455 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,455 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,455 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,456 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,456 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,456 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,456 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,457 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,458 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,458 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,458 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,458 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,458 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,459 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,459 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,459 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,460 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,460 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,460 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,460 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,461 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,461 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,461 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,461 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,461 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,462 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,462 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,462 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,462 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,462 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,463 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,463 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,463 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,463 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,464 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,464 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,465 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,465 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,465 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,465 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,466 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,466 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,466 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,466 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,467 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,467 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,467 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,467 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,468 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,468 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,468 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,469 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,469 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,469 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,470 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,470 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,470 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,471 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,471 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,471 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,472 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,472 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,472 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,472 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,473 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,473 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,473 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,473 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,473 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,474 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,474 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,474 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,474 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,474 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,475 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,475 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,475 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,475 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,476 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,476 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,476 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,476 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,476 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,477 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,477 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,477 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,477 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,478 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,478 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,478 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,478 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,478 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,479 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,479 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,479 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,479 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,480 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,480 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,480 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,480 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,480 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,481 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,481 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,481 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,481 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,482 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,482 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,482 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,482 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,482 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,483 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,483 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,483 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,483 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,484 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,484 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,484 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,484 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,485 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,485 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,485 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,485 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,485 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,486 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,486 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,486 [follow.py:42] DEBUG total failure: 0
+2015-05-24 19:18:31,486 [follow.py:41] DEBUG total success: 0
+2015-05-24 19:18:31,486 [follow.py:42] DEBUG total failure: 0

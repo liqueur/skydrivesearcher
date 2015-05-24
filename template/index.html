@@ -10,10 +10,10 @@
 <body>
   <div class="center-block clearfix" style="width:35%;padding-top:70px;">
     <h3 style="color:#666">网盘搜索(๑•̀ㅂ•́)و✧</h3>
-    <h5 style="color:#ccc">今日新增 2500 个资源</h5>
+    <h5 style="color:#ccc">共收录 {{ source_count }} 个资源</h5>
     <form method="POST" action="/result">
       <div class="form-group input-group">
-        <input class="form-control" type="text" name="query">
+        <input class="form-control" type="text" name="query" required>
         <span class="input-group-btn">
           <button class="btn btn-default" type="submit">搜索</button>
         </span>

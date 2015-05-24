@@ -3,6 +3,7 @@
 import lucene
 import tornado.web
 import tornado.ioloop
+import logging
 from pymongo import MongoClient
 from time import localtime, strftime, time
 from lucene import *
@@ -15,10 +16,58 @@ searcher = IndexSearcher(indexdir)
 # analyzer = ChineseAnalyzer(Version.LUCENE_30)
 analyzer = CJKAnalyzer(Version.LUCENE_30)
 formatter = SimpleHTMLFormatter("<span class=\'highlight\'>", "</span>")
+logger = None
+source_count = None
+
+def setup_logging():
+    '''
+    :desc:配置日志
+    '''
+    logging.basicConfig(
+        level=logging.DEBUG,
+        filename='serve.log',
+        format='%(asctime)s [%(filename)s:%(lineno)d] %(levelname)s %(message)s',
+        filemode='w',
+    )
+
+    console = logging.StreamHandler()
+    console.setLevel(logging.DEBUG)
+    formatter = logging.Formatter('%(asctime)s [%(filename)s:%(lineno)d] %(levelname)s %(message)s')
+    console.setFormatter(formatter)
+
+    global logger
+    logger = logging.getLogger(__name__)
+    logger.addHandler(console)
+
+def rebuild_indexing():
+    '''
+    :desc:重构索引
+    '''
+    logger.info('重构索引...')
+    db = MongoClient().sds
+    start_time = time()
+    items = db.source.find()
+    global source_count
+    source_count = db.source.count()
+    logger.info('收录数据 {} 条'.format(source_count))
+    writer = IndexWriter(indexdir, analyzer, True, IndexWriter.MaxFieldLength.UNLIMITED)
+    for item in items:
+        doc = Document()
+        doc.add(Field('title', item['title'], Field.Store.YES, Field.Index.ANALYZED))
+        doc.add(Field('url', item['url'], Field.Store.YES, Field.Index.NOT_ANALYZED))
+        doc.add(Field('time', str(item['time']), Field.Store.YES, Field.Index.NOT_ANALYZED))
+        writer.addDocument(doc)
+
+    writer.close()
+    cost_time = '%.3f s' % (time() - start_time)
+    logger.info('重构索引完毕，耗时 {}'.format(cost_time,))
 
 class IndexHandler(tornado.web.RequestHandler):
     def get(self):
-        self.render('index.html')
+        kwargs = dict(
+            source_count=source_count,
+        )
+        self.render('index.html', **kwargs)
 
 class ResultHandler(tornado.web.RequestHandler):
     def post(self):
@@ -66,5 +115,7 @@ application = tornado.web.Application([
 ], **settings)
 
 if __name__ == '__main__':
+    setup_logging()
+    # rebuild_indexing()
     application.listen(8888)
     tornado.ioloop.IOLoop.instance().start()
