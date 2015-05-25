@@ -25,7 +25,7 @@ def setup_logging():
     '''
     logging.basicConfig(
         level=logging.DEBUG,
-        filename='serve.log',
+        filename='log/serve.log',
         format='%(asctime)s [%(filename)s:%(lineno)d] %(levelname)s %(message)s',
         filemode='w',
     )
@@ -103,6 +103,10 @@ class ResultHandler(tornado.web.RequestHandler):
         )
         self.render('result.html', **kwargs)
 
+class ChartHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render('chart.html')
+
 settings = dict(
     debug=True,
     template_path='template',
@@ -112,6 +116,7 @@ settings = dict(
 application = tornado.web.Application([
     (r'/', IndexHandler),
     (r'/result', ResultHandler),
+    (r'/chart', ChartHandler),
 ], **settings)
 
 if __name__ == '__main__':

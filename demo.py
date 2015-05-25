@@ -1,10 +1,11 @@
 #coding:utf-8
 
-from time import sleep
+from functools import partial
 
-def gen(n):
-    for x in range(0, n, 24):
-        yield x
+def foo(a, b, c=None):
+    if c is None: c = 10
+    return (a + b) * c
 
-for x in gen(240):
-    print x
+print foo.__name__
+from IPython import embed
+embed()
