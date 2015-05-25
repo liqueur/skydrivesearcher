@@ -22,3 +22,5 @@
 2015-05-25 13:51:13,601 [web.py:1825] INFO 304 GET /static/script/Chart.min.js?v=7d8fd0c1dc6732675a1bd453a3f643a1 (127.0.0.1) 1.29ms
 2015-05-25 14:07:08,750 [web.py:1825] INFO 200 GET /chart (127.0.0.1) 2.70ms
 2015-05-25 14:07:09,120 [web.py:1825] INFO 304 GET /static/script/Chart.min.js?v=7d8fd0c1dc6732675a1bd453a3f643a1 (127.0.0.1) 1.24ms
+2015-05-25 20:52:36,630 [web.py:1825] INFO 304 GET /chart (127.0.0.1) 147.21ms
+2015-05-25 20:52:37,030 [web.py:1825] INFO 304 GET /static/script/Chart.min.js?v=7d8fd0c1dc6732675a1bd453a3f643a1 (127.0.0.1) 1.30ms

@@ -1,11 +1,24 @@
 #coding:utf-8
 
-from functools import partial
+from sched import scheduler
+from time import time, sleep
+from twisted.internet import defer, reactor
 
-def foo(a, b, c=None):
-    if c is None: c = 10
-    return (a + b) * c
+s = scheduler(time, sleep)
 
-print foo.__name__
-from IPython import embed
-embed()
+def finish():
+    sleep(1)
+    run()
+
+def callback(resp):
+    print resp
+    finish()
+
+def run():
+    d = defer.Deferred()
+    d.addCallback(callback)
+    d.callback('test')
+
+if __name__ == '__main__':
+    run()
+    reactor.run()

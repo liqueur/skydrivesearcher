@@ -4,35 +4,52 @@ from __future__ import unicode_literals
 from twisted.internet import defer, reactor
 from twisted.web.client import getPage
 from pymongo import MongoClient
-from time import time
+from sched import scheduler
+from time import time, sleep
 from functools import partial
 import json
 import logging
 import re
 import hashlib
+import requests
 
 db = MongoClient().sds
 
-logging.basicConfig(
-    level=logging.DEBUG,
-    filename='log/follow.log',
-    format='%(asctime)s [%(filename)s:%(lineno)d] %(levelname)s %(message)s',
-    filemode='w',
-)
+def gen_logger(name, filename, filemode):
+    format = '[%(filename)s:%(lineno)d %(asctime)s] %(levelname)s %(message)s'
+    logging.basicConfig(
+        level=logging.DEBUG,
+        filename=filename,
+        filemode=filemode,
+        format=format,
+    )
 
-console = logging.StreamHandler()
-console.setLevel(logging.DEBUG)
-formatter = logging.Formatter('%(asctime)s [%(filename)s:%(lineno)d] %(levelname)s %(message)s')
-console.setFormatter(formatter)
+    console = logging.StreamHandler()
+    console.setLevel(logging.DEBUG)
+    formatter = logging.Formatter(format)
+    console.setFormatter(formatter)
+    logger = logging.getLogger(name)
+    logger.addHandler(console)
 
-logger = logging.getLogger(__name__)
-logger.addHandler(console)
+    return logger
+
+logger = gen_logger(__name__, 'log/follow.log', 'a')
 
 URL = 'http://yun.baidu.com/pcloud/friend/getfollowlist?query_uk={uk}&limit=24&start={start}'
 
-LIMIT = 10
+LIMIT = 20
 
-start = time()
+DELAY = 10 * 60
+
+start = None
+
+def finish():
+    _time = int(time())
+    user_count = len(db.user.find_one({'origin':'baiduyun'}, {'uk_list':1})['uk_list'])
+    origin = 'baiduyun'
+    db.user_log.insert({'ctime':_time, 'user_count':user_count, 'origin':origin})
+    sleep(DELAY)
+    run()
 
 def loop(resp, data, success, failure, repeat, turn=None, prepare=None):
     total_success = len(success) - len(data)
@@ -42,7 +59,8 @@ def loop(resp, data, success, failure, repeat, turn=None, prepare=None):
     if len(data) == 0:
         if (turn is None) or (prepare is None) or (total_success == 0):
             logger.debug('cost time: {}'.format(time() - start))
-            reactor.stop()
+            # reactor.stop()
+            finish()
         else:
             logger.debug('turn {}'.format(turn.func.__name__))
             _data, _success, _failure = prepare(success)
@@ -64,7 +82,8 @@ def fetch_follow(data, success=None, failure=None, limit=None, failure_limit=3):
                                True)
                 data.remove(url)
                 logger.debug(success[url])
-            except KeyError:
+            except KeyError, e:
+                logger.error('{} {} {}'.format(e, url, resp))
                 success.pop(url)
                 data.remove(url)
 
@@ -97,10 +116,9 @@ def fetch_follow(data, success=None, failure=None, limit=None, failure_limit=3):
         return _data, _success, _failure
 
     repeat = partial(fetch_follow, limit=limit, failure_limit=failure_limit)
-    turn = partial(fetch_total_count, limit=limit, failure_limit=failure_limit)
 
     dl = defer.DeferredList([gen_defer(url) for url in data[:limit]])
-    dl.addCallbacks(loop, callbackArgs=[data, success, failure, repeat, turn, prepare])
+    dl.addCallbacks(loop, callbackArgs=[data, success, failure, repeat, None, None])
 
 def fetch_total_count(data, success=None, failure=None, limit=None, failure_limit=3):
     if success is None: success = {x: None for x in data}
@@ -111,15 +129,11 @@ def fetch_total_count(data, success=None, failure=None, limit=None, failure_limi
             try:
                 success[url] = fans['total_count']
                 data.remove(url)
-                logger.debug(fans['total_count'])
-            except KeyError:
+                logger.debug('total count: {}'.format(fans['total_count']))
+            except KeyError, e:
+                logger.error('{} {} {}'.format(e, url, resp))
                 success.pop(url)
                 data.remove(url)
-
-            # TODO
-            uk = int(re.findall(r'query_uk=(\d+)', url)[0])
-            db.user.update({'origin':'baiduyun'}, {'$pull':{'list':uk}})
-            db.user.update({'origin':'baiduyun'}, {'$addToSet':{'checked_list':uk}}, True)
 
         def errback(err):
             logger.error('{} {}'.format(err, url))
@@ -156,19 +170,27 @@ def fetch_total_count(data, success=None, failure=None, limit=None, failure_limi
     dl = defer.DeferredList([gen_defer(url) for url in data[:limit]])
     dl.addCallbacks(loop, callbackArgs=[data, success, failure, repeat, turn, prepare])
 
-def main():
+def run():
+    global start
+    start = time()
+    logger.info('run follow')
     user_count = len(db.user.find_one({'origin':'baiduyun'}, {'uk_list':1})['uk_list'])
     follow_offset = int(db.status.find_one({'origin':'baiduyun'}, {'follow_offset':1})['follow_offset'])
     if follow_offset + LIMIT >= user_count:
-        db.status.update({'origin':'baiduyun'}, {'$inc':{'follow_offset':user_count}})
+        db.status.update({'origin':'baiduyun'}, {'$set':{'follow_offset':user_count}})
         logger.debug('all done')
     else:
-        db.status.update({'origin':'baiduyun'}, {'$inc':{'follow_offset':LIMIT}})
         data = [URL.format(uk=uk, start=0).encode('utf-8') for uk in
                 db.user.find_one({'origin':'baiduyun'})['uk_list'][follow_offset:follow_offset+LIMIT]]
-        fetch_total_count(data, limit=LIMIT)
-
-        reactor.run()
+        if data and len(data):
+            resp = requests.get(data[0]).content
+            errno = json.loads(resp)['errno']
+            if errno == 0:
+                db.status.update({'origin':'baiduyun'}, {'$inc':{'follow_offset':LIMIT}})
+                fetch_total_count(data, limit=LIMIT)
+            else:
+                logger.error('errno: {}'.format(errno))
 
 if __name__ == '__main__':
-    main()
+    run()
+    reactor.run()
