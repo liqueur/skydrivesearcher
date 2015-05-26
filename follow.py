@@ -3,22 +3,16 @@
 from __future__ import unicode_literals
 from twisted.internet import defer, reactor
 from twisted.web.client import getPage
-from pymongo import MongoClient
 from time import time, sleep
 from functools import partial
 from tools import gen_logger
+from settings import *
 import json
 import logging
 import re
 import requests
 
-db = MongoClient().sds
-
 logger = gen_logger(__name__, 'log/follow.log', 'a')
-
-URL = 'http://yun.baidu.com/pcloud/friend/getfollowlist?query_uk={uk}&limit=24&start={start}'
-LIMIT = 20
-DELAY = 10 * 60
 start = None
 
 def finish():
@@ -26,7 +20,7 @@ def finish():
     user_count = len(db.user.find_one({'origin':'baiduyun'}, {'uk_list':1})['uk_list'])
     origin = 'baiduyun'
     db.user_log.insert({'ctime':_time, 'user_count':user_count, 'origin':origin})
-    sleep(DELAY)
+    sleep(FOLLOW_DELAY)
     run()
 
 def loop(resp, data, success, failure, repeat, turn=None, prepare=None):
@@ -85,7 +79,7 @@ def fetch_follow(data, success=None, failure=None, limit=None, failure_limit=3):
     def prepare(_success):
         _data = []
         for url, follow_list in _success.iteritems():
-            _data.extend([URL.format(uk=uk, start=0).encode('utf-8') for uk in follow_list])
+            _data.extend([FOLLOW_URL.format(uk=uk, start=0).encode('utf-8') for uk in follow_list])
 
         _data = list(set(_data))
         _success = {x: None for x in _data}
@@ -135,7 +129,7 @@ def fetch_total_count(data, success=None, failure=None, limit=None, failure_limi
         for url, total_count in _success.iteritems():
             if total_count > 0:
                 uk = re.findall(r'query_uk=(\d+)', url)[0]
-                _data.extend([URL.format(uk=uk, start=start)
+                _data.extend([FOLLOW_URL.format(uk=uk, start=start)
                     for start in range(0, total_count, 24)])
 
         _success = {x: None for x in _data}
@@ -154,26 +148,26 @@ def run():
     logger.info('run follow')
     user_count = len(db.user.find_one({'origin':'baiduyun'}, {'uk_list':1})['uk_list'])
     follow_offset = int(db.status.find_one({'origin':'baiduyun'}, {'follow_offset':1})['follow_offset'])
-    if follow_offset + LIMIT >= user_count:
+    if follow_offset + FOLLOW_LIMIT >= user_count:
         db.status.update({'origin':'baiduyun'}, {'$set':{'follow_offset':user_count}})
         logger.debug('all done')
         reactor.stop()
     else:
-        data = [URL.format(uk=uk, start=0).encode('utf-8') for uk in
-                db.user.find_one({'origin':'baiduyun'})['uk_list'][follow_offset:follow_offset+LIMIT]]
+        data = [FOLLOW_URL.format(uk=uk, start=0).encode('utf-8') for uk in
+                db.user.find_one({'origin':'baiduyun'})['uk_list'][follow_offset:follow_offset+FOLLOW_LIMIT]]
         try:
             resp = requests.get(data[0]).content
             errno = json.loads(resp)['errno']
             if errno == 0:
-                db.status.update({'origin':'baiduyun'}, {'$inc':{'follow_offset':LIMIT}})
-                fetch_total_count(data, limit=LIMIT)
+                db.status.update({'origin':'baiduyun'}, {'$inc':{'follow_offset':FOLLOW_LIMIT}})
+                fetch_total_count(data, limit=FOLLOW_LIMIT)
             else:
                 logger.error('errno: {}'.format(errno))
-                sleep(DELAY)
+                sleep(FOLLOW_DELAY)
                 run()
         except Exception, e:
             logger.error('{}'.format(e))
-            sleep(DELAY)
+            sleep(FOLLOW_DELAY)
             run()
 
 if __name__ == '__main__':

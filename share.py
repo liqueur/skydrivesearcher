@@ -4,27 +4,15 @@ from __future__ import unicode_literals
 from twisted.internet import defer, reactor
 from twisted.web.client import getPage
 from time import time, sleep
-from pymongo import MongoClient
 from functools import partial
 from tools import gen_logger
+from settings import *
 import json
 import logging
 import re
 import requests
 
-db = MongoClient().sds
-
 logger = gen_logger(__name__, 'log/share.log', 'a')
-
-BD_SHORT_URL = 'http://yun.baidu.com/s/{shorturl}'
-BD_SHARE_URL = 'http://yun.baidu.com/share/link?uk={uk}&shareid={shareid}'
-
-URL = 'http://yun.baidu.com/pcloud/feed/getsharelist?auth_type=1&start=1&limit=60&query_uk={uk}'
-URL2 = 'http://yun.baidu.com/share/homerecord?uk={uk}&page={page}&pagelength=60'
-
-LIMIT = 200
-DELAY = 2 * 60
-
 start = None
 
 def finish():
@@ -32,7 +20,7 @@ def finish():
     source_count = db.source.count()
     origin = 'baiduyun'
     db.source_log.insert({'ctime':_time, 'source_count':source_count, 'origin':origin})
-    sleep(DELAY)
+    sleep(SHARE_DELAY)
     run()
 
 def loop(resp, data, success, failure, repeat, turn, prepare):
@@ -63,9 +51,9 @@ def fetch_shared(data, success, failure=None, limit=None, failure_limit=3):
                 if x['typicalCategory'] < 0:
                     return -1
                 if len(x['shorturl']):
-                    return BD_SHORT_URL.format(shorturl=x['shorturl'])
+                    return BD_SHORT_SHARE_URL.format(shorturl=x['shorturl'])
                 else:
-                    return BD_SHARE_URL.format(uk=re.findall(r'uk=(\d+)', url)[0],
+                    return BD_SHARE_SHARE_URL.format(uk=re.findall(r'uk=(\d+)', url)[0],
                                                shareid=x['shareId'])
 
             try:
@@ -139,7 +127,7 @@ def fetch_total_count(data, success=None, failure=None, limit=None, failure_limi
             if total_count == 0:
                 total_count = 1
             uk = re.findall(r'query_uk=(\d+)', url)[0]
-            _data.extend([URL2.format(uk=uk, page=page).encode('utf-8')
+            _data.extend([RECORD_URL.format(uk=uk, page=page).encode('utf-8')
                 for page in range(1, total_count / 60 + int(total_count % 60 > 0) + 1)])
 
         _success = {x: None for x in _data}
@@ -158,22 +146,22 @@ def run():
     logger.info('run share')
     user_count = len(db.user.find_one({'origin':'baiduyun'}, {'uk_list':1})['uk_list'])
     share_offset = int(db.status.find_one({'origin':'baiduyun'}, {'share_offset':1})['share_offset'])
-    if share_offset + LIMIT >= user_count:
+    if share_offset + SHARE_LIMIT >= user_count:
         db.status.update({'origin':'baiduyun'}, {'$inc':{'share_offset':user_count}})
         logger.debug('all done')
         reactor.stop()
     else:
         uk_list = db.user.find_one({'origin':'baiduyun'})['uk_list']
-        data = [URL.format(uk=uk).encode('utf-8') for uk in uk_list[share_offset:share_offset+LIMIT]]
+        data = [SHARE_URL.format(uk=uk).encode('utf-8') for uk in uk_list[share_offset:share_offset+SHARE_LIMIT]]
         try:
             resp = requests.get(data[0]).content
             errno = json.loads(resp)['errno']
             if errno == 0:
-                db.status.update({'origin':'baiduyun'}, {'$inc':{'share_offset':LIMIT}})
-                fetch_total_count(data, limit=LIMIT)
+                db.status.update({'origin':'baiduyun'}, {'$inc':{'share_offset':SHARE_LIMIT}})
+                fetch_total_count(data, limit=SHARE_LIMIT)
             elif errno < 0:
                 logger.error('errno: {} {}'.format(errno, data[0]))
-                sleep(DELAY)
+                sleep(SHARE_DELAY)
                 run()
             else:
                 db.user.update({'origin':'baiduyun'}, {'$pull':{'uk_list':uk_list[share_offset]}})
@@ -181,7 +169,7 @@ def run():
                 run()
         except Exception, e:
             logger.error('{}'.format(e))
-            sleep(DELAY)
+            sleep(SHARE_DELAY)
             run()
 
 if __name__ == '__main__':

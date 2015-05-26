@@ -1,1 +1,228 @@
 
+[share.py:147 2015-05-26 19:58:44,846] INFO run share
+[share.py:147 2015-05-26 19:59:36,190] INFO run share
+[connectionpool.py:258 2015-05-26 19:59:36,260] INFO Starting new HTTP connection (1): yun.baidu.com
+[connectionpool.py:375 2015-05-26 19:59:36,316] DEBUG Setting read timeout to None
+[connectionpool.py:415 2015-05-26 19:59:39,840] DEBUG "GET /pcloud/feed/getsharelist?auth_type=1&start=1&limit=60&query_uk=1580452597 HTTP/1.1" 200 None
+[share.py:101 2015-05-26 19:59:40,427] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:40,429] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:40,447] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:40,449] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:40,450] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:40,451] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:40,452] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:40,462] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:40,464] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:40,466] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:40,479] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:40,491] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:40,493] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:40,495] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:40,497] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:40,510] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:40,511] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:40,517] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:40,520] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:40,526] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:40,551] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:40,567] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:40,573] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:40,594] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:40,598] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:40,600] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:40,602] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:40,609] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:40,611] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:40,619] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:40,621] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:40,625] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:40,656] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:40,658] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:40,673] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:40,675] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:40,686] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:40,695] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:40,698] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:40,700] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:40,702] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:40,705] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:40,717] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:40,726] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:40,729] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:40,732] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:40,734] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:40,737] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:40,755] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:40,759] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:40,761] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:40,763] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:40,767] DEBUG total_count: 2
+[share.py:101 2015-05-26 19:59:40,776] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:40,786] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:40,788] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:40,790] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:40,792] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:40,795] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:40,830] DEBUG total_count: 2
+[share.py:101 2015-05-26 19:59:41,189] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:41,223] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:41,234] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:41,239] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:41,241] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:41,246] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:41,407] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:41,425] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:41,439] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:41,440] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:41,445] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:41,447] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:41,449] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:41,453] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:41,462] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:41,497] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:41,536] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:41,538] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:41,542] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:41,618] DEBUG total_count: 4
+[share.py:101 2015-05-26 19:59:41,620] DEBUG total_count: 3
+[share.py:101 2015-05-26 19:59:41,623] DEBUG total_count: 2
+[share.py:101 2015-05-26 19:59:41,627] DEBUG total_count: 3
+[share.py:101 2015-05-26 19:59:41,637] DEBUG total_count: 5
+[share.py:101 2015-05-26 19:59:41,661] DEBUG total_count: 2
+[share.py:101 2015-05-26 19:59:41,879] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:41,989] DEBUG total_count: 5
+[share.py:101 2015-05-26 19:59:42,111] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:42,241] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:42,262] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:42,314] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:42,335] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:42,338] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:42,341] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:42,366] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:42,378] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:42,381] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:42,398] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:42,400] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:42,401] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:42,404] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:42,408] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:42,411] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:42,420] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:42,426] DEBUG total_count: 9
+[share.py:101 2015-05-26 19:59:42,435] DEBUG total_count: 9
+[share.py:101 2015-05-26 19:59:42,449] DEBUG total_count: 8
+[share.py:101 2015-05-26 19:59:42,454] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:42,482] DEBUG total_count: 17
+[share.py:101 2015-05-26 19:59:42,498] DEBUG total_count: 12
+[share.py:101 2015-05-26 19:59:42,510] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:42,515] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:42,521] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:42,553] DEBUG total_count: 15
+[share.py:101 2015-05-26 19:59:42,556] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:42,581] DEBUG total_count: 14
+[share.py:101 2015-05-26 19:59:42,601] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:42,642] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:42,666] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:42,679] DEBUG total_count: 44
+[share.py:101 2015-05-26 19:59:44,449] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:44,516] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:44,558] DEBUG total_count: 54
+[share.py:101 2015-05-26 19:59:44,717] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:44,926] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:45,031] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:45,088] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:45,093] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:45,112] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:45,132] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:45,142] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:45,154] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:45,185] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:45,218] DEBUG total_count: 10
+[share.py:101 2015-05-26 19:59:45,298] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:45,340] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:45,342] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:45,347] DEBUG total_count: 26
+[share.py:101 2015-05-26 19:59:45,352] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:45,354] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:45,355] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:45,357] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:45,380] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:45,399] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:45,445] DEBUG total_count: 68
+[share.py:101 2015-05-26 19:59:45,456] DEBUG total_count: 2
+[share.py:101 2015-05-26 19:59:45,458] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:45,462] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:45,464] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:45,466] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:45,470] DEBUG total_count: 5
+[share.py:101 2015-05-26 19:59:45,474] DEBUG total_count: 8
+[share.py:101 2015-05-26 19:59:45,502] DEBUG total_count: 58
+[share.py:101 2015-05-26 19:59:45,506] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:45,510] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:45,535] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:45,538] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:45,540] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:45,542] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:45,547] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:45,550] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:45,552] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:45,558] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:45,561] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:45,603] DEBUG total_count: 20
+[share.py:101 2015-05-26 19:59:45,623] DEBUG total_count: 21
+[share.py:101 2015-05-26 19:59:45,628] DEBUG total_count: 2
+[share.py:101 2015-05-26 19:59:45,728] DEBUG total_count: 204
+[share.py:101 2015-05-26 19:59:45,743] DEBUG total_count: 221
+[share.py:101 2015-05-26 19:59:45,757] DEBUG total_count: 68
+[share.py:101 2015-05-26 19:59:45,793] DEBUG total_count: 97
+[share.py:101 2015-05-26 19:59:45,873] DEBUG total_count: 6
+[share.py:101 2015-05-26 19:59:45,883] DEBUG total_count: 60
+[share.py:101 2015-05-26 19:59:45,976] DEBUG total_count: 16
+[share.py:101 2015-05-26 19:59:46,012] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:46,106] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:46,116] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:46,216] DEBUG total_count: 5
+[share.py:101 2015-05-26 19:59:46,301] DEBUG total_count: 8
+[share.py:101 2015-05-26 19:59:46,421] DEBUG total_count: 40
+[share.py:101 2015-05-26 19:59:46,431] DEBUG total_count: 318
+[share.py:101 2015-05-26 19:59:46,467] DEBUG total_count: 37
+[share.py:101 2015-05-26 19:59:46,485] DEBUG total_count: 11
+[share.py:101 2015-05-26 19:59:46,491] DEBUG total_count: 18
+[share.py:101 2015-05-26 19:59:46,583] DEBUG total_count: 98
+[share.py:101 2015-05-26 19:59:46,599] DEBUG total_count: 100
+[share.py:101 2015-05-26 19:59:47,128] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:47,461] DEBUG total_count: 72
+[share.py:101 2015-05-26 19:59:48,216] DEBUG total_count: 0
+[share.py:101 2015-05-26 19:59:48,242] DEBUG total_count: 27
+[share.py:101 2015-05-26 19:59:49,093] DEBUG total_count: 83
+[share.py:101 2015-05-26 19:59:49,746] DEBUG total_count: 40
+[share.py:101 2015-05-26 19:59:49,906] DEBUG total_count: 236
+[share.py:101 2015-05-26 19:59:49,920] DEBUG total_count: 281
+[share.py:101 2015-05-26 19:59:50,339] DEBUG total_count: 99
+[share.py:101 2015-05-26 19:59:50,523] DEBUG total_count: 95
+[share.py:101 2015-05-26 19:59:50,543] DEBUG total_count: 129
+[share.py:101 2015-05-26 19:59:50,623] DEBUG total_count: 62
+[share.py:101 2015-05-26 19:59:52,375] DEBUG total_count: 5
+[share.py:109 2015-05-26 19:59:55,257] ERROR [Failure instance: Traceback (failure with no frames): <class 'twisted.internet.defer.TimeoutError'>: Getting http://yun.baidu.com/pcloud/feed/getsharelist?auth_type=1&start=1&limit=60&query_uk=4047475657 took longer than 15 seconds.
+] http://yun.baidu.com/pcloud/feed/getsharelist?auth_type=1&start=1&limit=60&query_uk=4047475657
+[share.py:30 2015-05-26 19:59:55,258] DEBUG total success: 199
+[share.py:31 2015-05-26 19:59:55,258] DEBUG total failure: 1
+[share.py:42 2015-05-26 19:59:55,259] DEBUG repeat fetch_total_count
+[share.py:101 2015-05-26 20:00:00,623] DEBUG total_count: 1654
+[share.py:30 2015-05-26 20:00:00,624] DEBUG total success: 200
+[share.py:31 2015-05-26 20:00:00,626] DEBUG total failure: 0
+[share.py:38 2015-05-26 20:00:00,626] DEBUG turn fetch_shared
+[share.py:73 2015-05-26 20:00:16,204] ERROR [Failure instance: Traceback (failure with no frames): <class 'twisted.internet.defer.TimeoutError'>: Getting http://yun.baidu.com/share/homerecord?uk=3308057848&page=4&pagelength=60 took longer than 15 seconds.
+] http://yun.baidu.com/share/homerecord?uk=3308057848&page=4&pagelength=60
+[share.py:73 2015-05-26 20:00:16,276] ERROR [Failure instance: Traceback (failure with no frames): <class 'twisted.internet.defer.TimeoutError'>: Getting http://yun.baidu.com/share/homerecord?uk=71372009&page=2&pagelength=60 took longer than 15 seconds.
+] http://yun.baidu.com/share/homerecord?uk=71372009&page=2&pagelength=60
+[share.py:30 2015-05-26 20:00:16,277] DEBUG total success: 198
+[share.py:31 2015-05-26 20:00:16,277] DEBUG total failure: 59
+[share.py:42 2015-05-26 20:00:16,277] DEBUG repeat fetch_shared
+[share.py:30 2015-05-26 20:00:17,716] DEBUG total success: 257
+[share.py:31 2015-05-26 20:00:17,717] DEBUG total failure: 0
+[share.py:34 2015-05-26 20:00:17,717] DEBUG cost time: 41.5271799564
+[share.py:147 2015-05-26 20:00:21,013] INFO run share
+[connectionpool.py:258 2015-05-26 20:00:21,046] INFO Starting new HTTP connection (1): yun.baidu.com
+[connectionpool.py:375 2015-05-26 20:00:21,093] DEBUG Setting read timeout to None
+[connectionpool.py:415 2015-05-26 20:00:22,056] DEBUG "GET /pcloud/feed/getsharelist?auth_type=1&start=1&limit=60&query_uk=3745568736 HTTP/1.1" 200 None
