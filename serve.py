@@ -1,12 +1,14 @@
 #coding:utf-8
 
 import lucene
+import tornado
 import tornado.web
 import tornado.ioloop
 import logging
 from pymongo import MongoClient
 from time import localtime, strftime, time
 from lucene import *
+from tools import gen_logger
 
 lucene.initVM()
 db = MongoClient().sds
@@ -19,25 +21,7 @@ formatter = SimpleHTMLFormatter("<span class=\'highlight\'>", "</span>")
 logger = None
 source_count = None
 
-def setup_logging():
-    '''
-    :desc:配置日志
-    '''
-    logging.basicConfig(
-        level=logging.DEBUG,
-        filename='log/serve.log',
-        format='%(asctime)s [%(filename)s:%(lineno)d] %(levelname)s %(message)s',
-        filemode='w',
-    )
-
-    console = logging.StreamHandler()
-    console.setLevel(logging.DEBUG)
-    formatter = logging.Formatter('%(asctime)s [%(filename)s:%(lineno)d] %(levelname)s %(message)s')
-    console.setFormatter(formatter)
-
-    global logger
-    logger = logging.getLogger(__name__)
-    logger.addHandler(console)
+logger = gen_logger(__name__, 'log/serve.log', 'a')
 
 def rebuild_indexing():
     '''
@@ -69,39 +53,45 @@ class IndexHandler(tornado.web.RequestHandler):
         )
         self.render('index.html', **kwargs)
 
-class ResultHandler(tornado.web.RequestHandler):
-    def post(self):
-        query_string = self.get_argument('query')
-        query = QueryParser(Version.LUCENE_30, 'title', analyzer).parse(query_string)
-        scorer = QueryScorer(query, 'title')
-        highlighter = Highlighter(formatter, scorer)
-        highlighter.setTextFragmenter(SimpleSpanFragmenter(scorer))
-        start_time = time()
-        total_hits = searcher.search(query, 1000)
-        cost_time = '%.3f ms' % ((time() - start_time) * 1000,)
-        items = []
-        for hit in total_hits.scoreDocs:
-            doc= searcher.doc(hit.doc)
-            title = doc.get('title')
-            stream = TokenSources.getAnyTokenStream(searcher.getIndexReader(), hit.doc, 'title', doc, analyzer)
-            title = highlighter.getBestFragment(stream, title)
-            url = doc.get('url')
-            ctime = int(doc.get('time'))
-            item = dict(
-                title=title,
-                url=url,
-                time=ctime,
-            )
-            items.append(item)
+class QueryHandler(tornado.web.RequestHandler):
+    @tornado.web.asynchronous
+    def get(self):
+        query_string = self.get_argument('query', '')
+        if query_string.strip() == '':
+            self.redirect('/')
+            self.finish()
+        else:
+            query = QueryParser(Version.LUCENE_30, 'title', analyzer).parse(query_string)
+            scorer = QueryScorer(query, 'title')
+            highlighter = Highlighter(formatter, scorer)
+            highlighter.setTextFragmenter(SimpleSpanFragmenter(scorer))
+            start_time = time()
+            total_hits = searcher.search(query, 1000)
+            cost_time = '%.3f ms' % ((time() - start_time) * 1000,)
+            items = []
+            for hit in total_hits.scoreDocs:
+                doc= searcher.doc(hit.doc)
+                title = doc.get('title')
+                stream = TokenSources.getAnyTokenStream(searcher.getIndexReader(), hit.doc, 'title', doc, analyzer)
+                title = highlighter.getBestFragment(stream, title)
+                url = doc.get('url')
+                ctime = int(doc.get('time'))
+                item = dict(
+                    title=title,
+                    url=url,
+                    time=ctime,
+                )
+                items.append(item)
 
-        kwargs = dict(
-            query=query_string,
-            items=items,
-            localtime=localtime,
-            strftime=strftime,
-            cost_time=cost_time,
-        )
-        self.render('result.html', **kwargs)
+            kwargs = dict(
+                query=query_string,
+                items=items,
+                localtime=localtime,
+                strftime=strftime,
+                cost_time=cost_time,
+            )
+            self.render('result.html', **kwargs)
+            self.finish()
 
 class ChartHandler(tornado.web.RequestHandler):
     def get(self):
@@ -115,12 +105,10 @@ settings = dict(
 
 application = tornado.web.Application([
     (r'/', IndexHandler),
-    (r'/result', ResultHandler),
-    (r'/chart', ChartHandler),
+    (r'/query', QueryHandler),
 ], **settings)
 
 if __name__ == '__main__':
-    setup_logging()
     # rebuild_indexing()
     application.listen(8888)
     tornado.ioloop.IOLoop.instance().start()

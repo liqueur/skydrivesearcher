@@ -3,29 +3,18 @@
 from __future__ import unicode_literals
 from twisted.internet import defer, reactor
 from twisted.web.client import getPage
-from time import time
+from time import time, sleep
 from pymongo import MongoClient
 from functools import partial
+from tools import gen_logger
 import json
 import logging
 import re
+import requests
 
 db = MongoClient().sds
 
-logging.basicConfig(
-    level=logging.DEBUG,
-    filename='log/share.log',
-    format='%(asctime)s [%(filename)s:%(lineno)d] %(levelname)s %(message)s',
-    filemode='w',
-)
-
-console = logging.StreamHandler()
-console.setLevel(logging.DEBUG)
-formatter = logging.Formatter('%(asctime)s [%(filename)s:%(lineno)d] %(levelname)s %(message)s')
-console.setFormatter(formatter)
-
-logger = logging.getLogger(__name__)
-logger.addHandler(console)
+logger = gen_logger(__name__, 'log/share.log', 'a')
 
 BD_SHORT_URL = 'http://yun.baidu.com/s/{shorturl}'
 BD_SHARE_URL = 'http://yun.baidu.com/share/link?uk={uk}&shareid={shareid}'
@@ -34,8 +23,17 @@ URL = 'http://yun.baidu.com/pcloud/feed/getsharelist?auth_type=1&start=1&limit=6
 URL2 = 'http://yun.baidu.com/share/homerecord?uk={uk}&page={page}&pagelength=60'
 
 LIMIT = 200
+DELAY = 2 * 60
 
-start = time()
+start = None
+
+def finish():
+    _time = int(time())
+    source_count = db.source.count()
+    origin = 'baiduyun'
+    db.source_log.insert({'ctime':_time, 'source_count':source_count, 'origin':origin})
+    sleep(DELAY)
+    run()
 
 def loop(resp, data, success, failure, repeat, turn, prepare):
     total_success = len(success) - len(data)
@@ -45,7 +43,8 @@ def loop(resp, data, success, failure, repeat, turn, prepare):
     if len(data) == 0:
         if (turn is None) or (prepare is None) or (total_success == 0):
             logger.debug('cost time: {}'.format(time() - start))
-            reactor.stop()
+            # reactor.stop()
+            finish()
         else:
             logger.debug('turn {}'.format(turn.func.__name__))
             _data, _success, _failure = prepare(success)
@@ -153,19 +152,38 @@ def fetch_total_count(data, success=None, failure=None, limit=None, failure_limi
     dl = defer.DeferredList([gen_defer(url) for url in data[:limit]])
     dl.addCallbacks(loop, callbackArgs=[data, success, failure, repeat, turn, prepare])
 
-def main():
+def run():
+    global start
+    start = time()
+    logger.info('run share')
     user_count = len(db.user.find_one({'origin':'baiduyun'}, {'uk_list':1})['uk_list'])
     share_offset = int(db.status.find_one({'origin':'baiduyun'}, {'share_offset':1})['share_offset'])
     if share_offset + LIMIT >= user_count:
         db.status.update({'origin':'baiduyun'}, {'$inc':{'share_offset':user_count}})
         logger.debug('all done')
+        reactor.stop()
     else:
-        db.status.update({'origin':'baiduyun'}, {'$inc':{'share_offset':LIMIT}})
-        data = [URL.format(uk=uk).encode('utf-8') for uk in
-                db.user.find_one({'origin':'baiduyun'})['uk_list'][share_offset:share_offset+LIMIT]]
-        fetch_total_count(data, limit=LIMIT)
-
-        reactor.run()
+        uk_list = db.user.find_one({'origin':'baiduyun'})['uk_list']
+        data = [URL.format(uk=uk).encode('utf-8') for uk in uk_list[share_offset:share_offset+LIMIT]]
+        try:
+            resp = requests.get(data[0]).content
+            errno = json.loads(resp)['errno']
+            if errno == 0:
+                db.status.update({'origin':'baiduyun'}, {'$inc':{'share_offset':LIMIT}})
+                fetch_total_count(data, limit=LIMIT)
+            elif errno < 0:
+                logger.error('errno: {} {}'.format(errno, data[0]))
+                sleep(DELAY)
+                run()
+            else:
+                db.user.update({'origin':'baiduyun'}, {'$pull':{'uk_list':uk_list[share_offset]}})
+                logger.debug('pull uk {}'.format(uk_list[share_offset]))
+                run()
+        except Exception, e:
+            logger.error('{}'.format(e))
+            sleep(DELAY)
+            run()
 
 if __name__ == '__main__':
-    main()
+    run()
+    reactor.run()

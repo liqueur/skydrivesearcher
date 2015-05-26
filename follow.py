@@ -4,43 +4,21 @@ from __future__ import unicode_literals
 from twisted.internet import defer, reactor
 from twisted.web.client import getPage
 from pymongo import MongoClient
-from sched import scheduler
 from time import time, sleep
 from functools import partial
+from tools import gen_logger
 import json
 import logging
 import re
-import hashlib
 import requests
 
 db = MongoClient().sds
 
-def gen_logger(name, filename, filemode):
-    format = '[%(filename)s:%(lineno)d %(asctime)s] %(levelname)s %(message)s'
-    logging.basicConfig(
-        level=logging.DEBUG,
-        filename=filename,
-        filemode=filemode,
-        format=format,
-    )
-
-    console = logging.StreamHandler()
-    console.setLevel(logging.DEBUG)
-    formatter = logging.Formatter(format)
-    console.setFormatter(formatter)
-    logger = logging.getLogger(name)
-    logger.addHandler(console)
-
-    return logger
-
 logger = gen_logger(__name__, 'log/follow.log', 'a')
 
 URL = 'http://yun.baidu.com/pcloud/friend/getfollowlist?query_uk={uk}&limit=24&start={start}'
-
 LIMIT = 20
-
 DELAY = 10 * 60
-
 start = None
 
 def finish():
@@ -179,10 +157,11 @@ def run():
     if follow_offset + LIMIT >= user_count:
         db.status.update({'origin':'baiduyun'}, {'$set':{'follow_offset':user_count}})
         logger.debug('all done')
+        reactor.stop()
     else:
         data = [URL.format(uk=uk, start=0).encode('utf-8') for uk in
                 db.user.find_one({'origin':'baiduyun'})['uk_list'][follow_offset:follow_offset+LIMIT]]
-        if data and len(data):
+        try:
             resp = requests.get(data[0]).content
             errno = json.loads(resp)['errno']
             if errno == 0:
@@ -190,6 +169,12 @@ def run():
                 fetch_total_count(data, limit=LIMIT)
             else:
                 logger.error('errno: {}'.format(errno))
+                sleep(DELAY)
+                run()
+        except Exception, e:
+            logger.error('{}'.format(e))
+            sleep(DELAY)
+            run()
 
 if __name__ == '__main__':
     run()

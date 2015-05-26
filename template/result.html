@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8">
-    <title></title>
+    <title>网盘搜索</title>
     <link rel="stylesheet" href="{{ static_url('bootstrap/css/bootstrap.min.css') }}">
     <script src="{{ static_url('script/jquery.min.js') }}"></script>
     <script src="{{ static_url('bootstrap/js/bootstrap.min.js') }}"></script>
@@ -26,7 +26,7 @@
 
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-          <form class="navbar-form navbar-left" role="search" action="" method="POST">
+          <form class="navbar-form navbar-left" role="search" action="/query" method="GET">
             <div class="form-group">
               <input id="query" name="query" type="text" class="form-control" value="{{ query }}" style="width:300px;">
             </div>
@@ -61,7 +61,7 @@
   </body>
   <script type="text/javascript">
     $(document).ready(function(){
-      $("#query").select();
+      /* $("#query").select(); */
     });
   </script>
 </html>
