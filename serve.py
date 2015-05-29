@@ -5,10 +5,15 @@ import tornado
 import tornado.web
 import tornado.ioloop
 import logging
+import string
+import json
 from pymongo import MongoClient
 from time import localtime, strftime, time
 from lucene import *
+from settings import *
 from tools import gen_logger
+from functools import wraps
+from StringIO import StringIO
 
 lucene.initVM()
 db = MongoClient().sds
@@ -21,7 +26,14 @@ formatter = SimpleHTMLFormatter("<span class=\'highlight\'>", "</span>")
 logger = None
 source_count = None
 
-logger = gen_logger(__name__, 'log/serve.log', 'a')
+logger = gen_logger(__file__, 'w')
+
+def traffic_counter(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        db.monitor.update({}, {'$inc':{'traffic':1}})
+        return func(*args, **kwargs)
+    return wrapper
 
 def rebuild_indexing():
     '''
@@ -47,6 +59,7 @@ def rebuild_indexing():
     logger.info('重构索引完毕，耗时 {}'.format(cost_time,))
 
 class IndexHandler(tornado.web.RequestHandler):
+    @traffic_counter
     def get(self):
         kwargs = dict(
             source_count=source_count,
@@ -54,10 +67,11 @@ class IndexHandler(tornado.web.RequestHandler):
         self.render('index.html', **kwargs)
 
 class QueryHandler(tornado.web.RequestHandler):
+    @traffic_counter
     @tornado.web.asynchronous
     def get(self):
-        query_string = self.get_argument('query', '')
-        if query_string.strip() == '':
+        query_string = self.get_argument('query', '').strip()
+        if query_string == '':
             self.redirect('/')
             self.finish()
         else:
@@ -93,9 +107,150 @@ class QueryHandler(tornado.web.RequestHandler):
             self.render('result.html', **kwargs)
             self.finish()
 
-class ChartHandler(tornado.web.RequestHandler):
+class OverlookHandler(tornado.web.RequestHandler):
     def get(self):
-        self.render('chart.html')
+        self.render('dashboard.html')
+
+class UserLogHandler(tornado.web.RequestHandler):
+    def get(self):
+        user_log_list = list(db.user_log.find())
+        def gen_time(ctime):
+            return strftime('%H:%M', localtime(ctime))
+
+        if len(user_log_list) <= LOG_LIMIT:
+            ctime_list = [gen_time(x['ctime']) for x in user_log_list]
+            count_list = [x['count'] for x in user_log_list]
+        else:
+            user_log_list = user_log_list[len(user_log_list) - LOG_LIMIT:]
+            ctime_list = [gen_time(x['ctime']) for x in user_log_list]
+            count_list = [x['count'] for x in user_log_list]
+
+        data = dict(
+            ctime_list=ctime_list,
+            count_list=count_list,
+        )
+
+        self.write(json.dumps(data))
+
+class SourceLogHandler(tornado.web.RequestHandler):
+    def get(self):
+        source_log_list = list(db.source_log.find())
+        def gen_time(ctime):
+            return strftime('%H:%M', localtime(ctime))
+
+        if len(source_log_list) <= LOG_LIMIT:
+            ctime_list = [gen_time(x['ctime']) for x in source_log_list]
+            count_list = [x['count'] for x in source_log_list]
+        else:
+            source_log_list = source_log_list[len(source_log_list) - LOG_LIMIT:]
+            ctime_list = [gen_time(x['ctime']) for x in source_log_list]
+            count_list = [x['count'] for x in source_log_list]
+
+        data = dict(
+            ctime_list=ctime_list,
+            count_list=count_list,
+        )
+
+        self.write(json.dumps(data))
+
+class TrafficLogHandler(tornado.web.RequestHandler):
+    def get(self):
+        traffic_log_list = list(db.traffic_log.find())
+        def gen_time(ctime):
+            return strftime('%H:%M', localtime(ctime))
+
+        if len(traffic_log_list) <= LOG_LIMIT:
+            ctime_list = [gen_time(x['ctime']) for x in traffic_log_list]
+            count_list = [x['count'] for x in traffic_log_list]
+        else:
+            traffic_log_list = traffic_log_list[len(traffic_log_list) - LOG_LIMIT:]
+            ctime_list = [gen_time(x['ctime']) for x in traffic_log_list]
+            count_list = [x['count'] for x in traffic_log_list]
+
+        data = dict(
+            ctime_list=ctime_list,
+            count_list=count_list,
+        )
+
+        self.write(json.dumps(data))
+
+class UserLogCSVHandler(tornado.web.RequestHandler):
+    @tornado.web.asynchronous
+    def get(self):
+        filename = 'user.log.{}.csv'.format(int(time()))
+        self.set_header('Content-Type', 'application/octet-stream')
+        self.set_header('Content-Disposition', 'attachment;filename='+filename)
+
+        def gen_line(item):
+            _ctime = strftime('%Y-%m-%d %H:%M', localtime(item['ctime']))
+            count = item['count']
+            return '{ctime},{count}\n'.format(ctime=_ctime, count=count)
+
+        def yield_line():
+            for item in db.user_log.find():
+                yield gen_line(item)
+
+        self.write('ctime,user_count\n')
+        for line in yield_line():
+            self.write(line)
+
+        self.finish()
+
+class SourceLogCSVHandler(tornado.web.RequestHandler):
+    @tornado.web.asynchronous
+    def get(self):
+        filename = 'source.log.{}.csv'.format(int(time()))
+        self.set_header('Content-Type', 'application/octet-stream')
+        self.set_header('Content-Disposition', 'attachment;filename='+filename)
+
+        def gen_line(item):
+            _ctime = strftime('%Y-%m-%d %H:%M', localtime(item['ctime']))
+            count = item['count']
+            return '{ctime},{count}\n'.format(ctime=_ctime, count=count)
+
+        def yield_line():
+            for item in db.source_log.find():
+                yield gen_line(item)
+
+        self.write('ctime,source_count\n')
+        for line in yield_line():
+            self.write(line)
+
+        self.finish()
+
+class TrafficLogCSVHandler(tornado.web.RequestHandler):
+    @tornado.web.asynchronous
+    def get(self):
+        filename = 'traffic.log.{}.csv'.format(int(time()))
+        self.set_header('Content-Type', 'application/octet-stream')
+        self.set_header('Content-Disposition', 'attachment;filename='+filename)
+
+        def gen_line(item):
+            _ctime = strftime('%Y-%m-%d %H:%M', localtime(item['ctime']))
+            count = item['count']
+            return '{ctime},{count}\n'.format(ctime=_ctime, count=count)
+
+        def yield_line():
+            for item in db.traffic_log.find():
+                yield gen_line(item)
+
+        self.write('ctime,traffic_count\n')
+        for line in yield_line():
+            self.write(line)
+
+        self.finish()
+
+class MessageHandler(tornado.web.RequestHandler):
+    def get(self):
+        return self.render('message.html')
+
+class NoticeHandler(tornado.web.RequestHandler):
+    def get(self):
+        return self.render('notice.html')
+
+class DonateHandler(tornado.web.RequestHandler):
+    def get(self):
+        return self.render('donate.html')
 
 settings = dict(
     debug=True,
@@ -106,6 +261,17 @@ settings = dict(
 application = tornado.web.Application([
     (r'/', IndexHandler),
     (r'/query', QueryHandler),
+    (r'/admin', OverlookHandler),
+    (r'/admin/overlook', OverlookHandler),
+    (r'/admin/userlog', UserLogHandler),
+    (r'/admin/userlog/csv', UserLogCSVHandler),
+    (r'/admin/sourcelog', SourceLogHandler),
+    (r'/admin/sourcelog/csv', SourceLogCSVHandler),
+    (r'/admin/trafficlog', TrafficLogHandler),
+    (r'/admin/trafficlog/csv', TrafficLogCSVHandler),
+    (r'/admin/message', MessageHandler),
+    (r'/admin/notice', NoticeHandler),
+    (r'/admin/donate', DonateHandler),
 ], **settings)
 
 if __name__ == '__main__':

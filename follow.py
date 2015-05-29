@@ -1,9 +1,10 @@
+#!/usr/bin/env python
 #coding:utf-8
 
 from __future__ import unicode_literals
 from twisted.internet import defer, reactor
 from twisted.web.client import getPage
-from time import time, sleep
+from time import time
 from functools import partial
 from tools import gen_logger
 from settings import *
@@ -12,26 +13,24 @@ import logging
 import re
 import requests
 
-logger = gen_logger(__name__, 'log/follow.log', 'a')
+logger = gen_logger(__file__, 'w')
 start = None
 
 def finish():
     _time = int(time())
-    user_count = len(db.user.find_one({'origin':'baiduyun'}, {'uk_list':1})['uk_list'])
+    count = len(db.user.find_one({'origin':'baiduyun'}, {'uk_list':1})['uk_list'])
     origin = 'baiduyun'
-    db.user_log.insert({'ctime':_time, 'user_count':user_count, 'origin':origin})
-    sleep(FOLLOW_DELAY)
-    run()
+    db.user_log.insert({'ctime':_time, 'count':count, 'origin':origin})
+    reactor.stop()
 
 def loop(resp, data, success, failure, repeat, turn=None, prepare=None):
     total_success = len(success) - len(data)
     total_failure = len(data)
     logger.debug('total success: {}'.format(total_success))
     logger.debug('total failure: {}'.format(total_failure))
-    if len(data) == 0:
+    if not data:
         if (turn is None) or (prepare is None) or (total_success == 0):
             logger.debug('cost time: {}'.format(time() - start))
-            # reactor.stop()
             finish()
         else:
             logger.debug('turn {}'.format(turn.func.__name__))
@@ -82,7 +81,7 @@ def fetch_follow(data, success=None, failure=None, limit=None, failure_limit=3):
             _data.extend([FOLLOW_URL.format(uk=uk, start=0).encode('utf-8') for uk in follow_list])
 
         _data = list(set(_data))
-        _success = {x: None for x in _data}
+        _success = dict.fromkeys(_data, None)
         _failure = {}
 
         return _data, _success, _failure
@@ -132,7 +131,7 @@ def fetch_total_count(data, success=None, failure=None, limit=None, failure_limi
                 _data.extend([FOLLOW_URL.format(uk=uk, start=start)
                     for start in range(0, total_count, 24)])
 
-        _success = {x: None for x in _data}
+        _success = dict.fromkeys(_data, None)
         _failure = {}
         return _data, _success, _failure
 
@@ -149,9 +148,8 @@ def run():
     user_count = len(db.user.find_one({'origin':'baiduyun'}, {'uk_list':1})['uk_list'])
     follow_offset = int(db.status.find_one({'origin':'baiduyun'}, {'follow_offset':1})['follow_offset'])
     if follow_offset + FOLLOW_LIMIT >= user_count:
-        db.status.update({'origin':'baiduyun'}, {'$set':{'follow_offset':user_count}})
         logger.debug('all done')
-        reactor.stop()
+        return -1
     else:
         data = [FOLLOW_URL.format(uk=uk, start=0).encode('utf-8') for uk in
                 db.user.find_one({'origin':'baiduyun'})['uk_list'][follow_offset:follow_offset+FOLLOW_LIMIT]]
@@ -163,13 +161,10 @@ def run():
                 fetch_total_count(data, limit=FOLLOW_LIMIT)
             else:
                 logger.error('errno: {}'.format(errno))
-                sleep(FOLLOW_DELAY)
-                run()
+                return -1
         except Exception, e:
             logger.error('{}'.format(e))
-            sleep(FOLLOW_DELAY)
-            run()
+            return -1
 
 if __name__ == '__main__':
-    run()
-    reactor.run()
+    if run() is None: reactor.run()

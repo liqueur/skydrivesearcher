@@ -16,3 +16,5 @@ RECORD_URL = 'http://yun.baidu.com/share/homerecord?uk={uk}&page={page}&pageleng
 
 SHARE_LIMIT = 200
 SHARE_DELAY = 2 * 60
+
+LOG_LIMIT = 25

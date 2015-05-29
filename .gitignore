@@ -1,5 +1,8 @@
 index/*
+log/*
 *.swp
 *.pyc
 *.gen
+*.log
+*.csv
 *.log
