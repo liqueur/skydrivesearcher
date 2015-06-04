@@ -1,6 +1,10 @@
 #coding:utf-8
 
+import lucene
+from lucene import *
 from pymongo import MongoClient
+
+initVM()
 
 db = MongoClient().sds
 
@@ -18,3 +22,18 @@ SHARE_LIMIT = 200
 SHARE_DELAY = 2 * 60
 
 LOG_LIMIT = 25
+
+RESULT_PAGE_SIZE = 20
+RESULT_MAX_NUM = 5000
+
+TEST_CHINESE_CONTENT = '''
+中华人民共和国
+'''
+
+# ANALYZER = StandardAnalyzer(Version.LUCENE_30)
+ANALYZER = ChineseAnalyzer(Version.LUCENE_30)
+# ANALYZER = CJKAnalyzer(Version.LUCENE_30)
+
+INDEXDIR = SimpleFSDirectory(File('index'))
+SEARCHER = IndexSearcher(INDEXDIR)
+FORMATTER = SimpleHTMLFormatter("<span class=\'highlight\'>", "</span>")

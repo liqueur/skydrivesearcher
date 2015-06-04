@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+      .highlight {
+        color: #f00;
+      }
+    </style>
+  </head>
+  <body>
+    {{ content }}
+    <form action="" method="POST">
+      <input type="text" name="query_string" required>
+      <input type="submit" value="查询">
+    </form>
+    结果:
+    {% if items %}
+    {% for item in items %}
+    <ul>
+      <li>{% raw item %}</li>
+    </ul>
+    {% end %}
+    {% end %}
+  </body>
+</html>
