@@ -2,7 +2,7 @@
 
 import lucene
 from lucene import *
-from settings import TEST_CHINESE_CONTENT, ANALYZER
+from settings import *
 
 initVM()
 indexdir = SimpleFSDirectory(File('testindex'))

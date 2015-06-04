@@ -1,0 +1,11 @@
+ChineseAnalyzer
+commit
+518
+
+CJKAnalyzer
+commit
+633
+
+SmartChineseAnalyzer
+commit
+1506

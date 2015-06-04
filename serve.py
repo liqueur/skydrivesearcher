@@ -7,6 +7,7 @@ import tornado.ioloop
 import logging
 import string
 import json
+import re
 from pymongo import MongoClient
 from time import localtime, strftime, time
 from lucene import *
@@ -38,12 +39,18 @@ def rebuild_indexing():
     source_count = db.source.count()
     logger.info('收录数据 {} 条'.format(source_count))
     writer = IndexWriter(INDEXDIR, ANALYZER, True, IndexWriter.MaxFieldLength.UNLIMITED)
+    # writer.setRAMBufferSizeMB(16)
+    counter = 0
     for item in items:
         doc = Document()
         doc.add(Field('title', item['title'], Field.Store.YES, Field.Index.ANALYZED))
         doc.add(Field('url', item['url'], Field.Store.YES, Field.Index.NOT_ANALYZED))
         doc.add(Field('time', str(item['time']), Field.Store.YES, Field.Index.NOT_ANALYZED))
         writer.addDocument(doc)
+        counter += 1
+        if counter % 10000 == 0:
+            logger.info('提交索引, 计数{}'.format(counter))
+            writer.commit()
 
     writer.close()
     cost_time = '%.3f s' % (time() - start_time)
@@ -61,11 +68,15 @@ class QueryHandler(tornado.web.RequestHandler):
     @traffic_counter
     @tornado.web.asynchronous
     def get(self):
+        def replace(matched):
+            return '\{escape}'.format(escape=matched.group('escape'))
         query_string = self.get_argument('query_string', '').strip()
         page = int(self.get_argument('page', 1))
         if query_string == '':
             self.send_error(400)
         else:
+            # 转义特殊字符
+            query_string = re.sub(r'(?P<escape>[-+!\\():^\]\[{}~*?])', replace, query_string)
             query = QueryParser(Version.LUCENE_30, 'title', ANALYZER).parse(query_string)
             scorer = QueryScorer(query, 'title')
             highlighter = Highlighter(FORMATTER, scorer)
@@ -73,8 +84,10 @@ class QueryHandler(tornado.web.RequestHandler):
             start_time = time()
             total_hits = SEARCHER.search(query, RESULT_MAX_NUM)
             cost_time = '%.3f ms' % ((time() - start_time) * 1000,)
-            items = []
-            for hit in total_hits.scoreDocs:
+
+            t1 = time()
+
+            def wrap(hit):
                 doc= SEARCHER.doc(hit.doc)
                 title = doc.get('title')
                 stream = TokenSources.getAnyTokenStream(SEARCHER.getIndexReader(), hit.doc, 'title', doc, ANALYZER)
@@ -86,13 +99,18 @@ class QueryHandler(tornado.web.RequestHandler):
                     url=url,
                     time=strftime('%Y-%m-%d %H:%M:%S', localtime(ctime))
                 )
-                items.append(item)
+                return item
+
+            items = map(wrap, total_hits.scoreDocs)
+
+            data_time = '%.3f ms' % ((time() - t1) * 1000,)
 
             # 对搜索结果分页
             paging = pagination(items, page, RESULT_PAGE_SIZE)
 
             kwargs = dict(
                 cost_time=cost_time,
+                data_time=data_time,
                 paging=paging,
             )
 

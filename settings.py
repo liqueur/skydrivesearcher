@@ -31,8 +31,9 @@ TEST_CHINESE_CONTENT = '''
 '''
 
 # ANALYZER = StandardAnalyzer(Version.LUCENE_30)
-ANALYZER = ChineseAnalyzer(Version.LUCENE_30)
+# ANALYZER = ChineseAnalyzer(Version.LUCENE_30)
 # ANALYZER = CJKAnalyzer(Version.LUCENE_30)
+ANALYZER = SmartChineseAnalyzer(Version.LUCENE_30)
 
 INDEXDIR = SimpleFSDirectory(File('index'))
 SEARCHER = IndexSearcher(INDEXDIR)

@@ -11,17 +11,15 @@
     <script src="{{ static_url('script/tools.js') }}"></script>
   </head>
   <style>
+    html {
+      position: relative;
+      min-height: 100%;
+    }
+
     body {
       margin: 0;
       overflow-x: hidden;
-      min-height: 500px;
-      width: 100%;
-      height: 100%;
-      display:table;
-    }
-
-    input {
-      outline: none;
+      margin-bottom: 150px;
     }
 
     .highlight {
@@ -38,11 +36,12 @@
 
     .footer {
       text-align: center;
-      margin-top: 0px;
-      margin-left: auto;
-      margin-right: auto;
       background-color: #fafafa;
       color: #888;
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 150px;
     }
   </style>
   <body>
@@ -85,6 +84,9 @@
         <li>
           <span class="text-muted">搜索耗时 {$ cost_time $}</span>
         </li>
+        <li>
+          <span class="text-muted">数据处理耗时 {$ data_time $}</span>
+        </li>
         <li ng-repeat="item in paging.objects">
           <h4><a href="{$ item.url $}" target="_blank" ng-bind-html="item.title|safe"></a></h4>
           <span class="" style="color:#ccc">{$ item.time $}</span>
@@ -92,7 +94,7 @@
         <li ng-show="paging.is_empty">
           <h4 style="color:#333">没有找到资源</h4>
           <ul>
-            <li>增加关键字，不要使用单字搜索</li>
+            <li>增加关键字</li>
             <li>
               <a href="mailto:liqueurize@yeah.net">反馈作者</a>
             </li>
@@ -173,6 +175,7 @@
           success(function(ret, status, headers, config){
           $scope.status = "result";
           $scope.cost_time = ret.cost_time;
+          $scope.data_time = ret.data_time;
           $scope.paging = ret.paging;
           btnLoading(".search-btn", false);
           window.location.href = "#top";
