@@ -49,8 +49,8 @@ def rebuild_indexing():
         writer.addDocument(doc)
         counter += 1
         if counter % 10000 == 0:
-            logger.info('提交索引, 计数{}'.format(counter))
-            writer.commit()
+            logger.info('计数 {} / {}'.format(counter, source_count))
+            # writer.commit()
 
     writer.close()
     cost_time = '%.3f s' % (time() - start_time)
@@ -84,8 +84,13 @@ class QueryHandler(tornado.web.RequestHandler):
             start_time = time()
             total_hits = SEARCHER.search(query, RESULT_MAX_NUM)
             cost_time = '%.3f ms' % ((time() - start_time) * 1000,)
+            total_count = len(total_hits.scoreDocs)
 
             t1 = time()
+
+            # 对搜索结果进行高亮和封装
+            # 对搜索结果分页
+            paging = pagination(total_hits.scoreDocs, page, RESULT_PAGE_SIZE)
 
             def wrap(hit):
                 doc= SEARCHER.doc(hit.doc)
@@ -101,17 +106,15 @@ class QueryHandler(tornado.web.RequestHandler):
                 )
                 return item
 
-            items = map(wrap, total_hits.scoreDocs)
+            paging['objects'] = map(wrap, paging['objects'])
 
             data_time = '%.3f ms' % ((time() - t1) * 1000,)
-
-            # 对搜索结果分页
-            paging = pagination(items, page, RESULT_PAGE_SIZE)
 
             kwargs = dict(
                 cost_time=cost_time,
                 data_time=data_time,
                 paging=paging,
+                total_count=total_count,
             )
 
             self.write(json.dumps(kwargs))

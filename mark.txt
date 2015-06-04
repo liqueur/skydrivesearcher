@@ -9,3 +9,7 @@ commit
 SmartChineseAnalyzer
 commit
 1506
+
+SmartChineseAnalyzer
+no commit
+1002

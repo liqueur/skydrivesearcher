@@ -80,13 +80,18 @@
           </div>
         </div>
       </nav>
-      <ul id="result-list" class="list-unstyled" style="padding-left:100px;padding-bottom:20px;">
+      <ul class="list-inline" style="padding-left:100px;padding-bottom:10px;">
+        <li>
+          <span class="text-muted">找到 {$ total_count $} 个结果</span>
+        </li>
         <li>
           <span class="text-muted">搜索耗时 {$ cost_time $}</span>
         </li>
         <li>
           <span class="text-muted">数据处理耗时 {$ data_time $}</span>
         </li>
+      </ul>
+      <ul id="result-list" class="list-unstyled" style="padding-left:100px;padding-bottom:20px;">
         <li ng-repeat="item in paging.objects">
           <h4><a href="{$ item.url $}" target="_blank" ng-bind-html="item.title|safe"></a></h4>
           <span class="" style="color:#ccc">{$ item.time $}</span>
@@ -139,6 +144,7 @@
           <ul>
             <li><a href="">API</a></li>
             <li><a href="mailto:liqueurize@yeah.net">意见反馈</a></li>
+            <li><a href="">捐赠</a></li>
           </ul>
         </div>
       </div>
@@ -176,6 +182,7 @@
           $scope.status = "result";
           $scope.cost_time = ret.cost_time;
           $scope.data_time = ret.data_time;
+          $scope.total_count = ret.total_count;
           $scope.paging = ret.paging;
           btnLoading(".search-btn", false);
           window.location.href = "#top";
