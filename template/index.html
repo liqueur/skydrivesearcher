@@ -2,7 +2,8 @@
 <html lang="en" ng-app="result" ng-controller="MainCtrl">
   <head>
     <meta charset="UTF-8">
-    <title>网盘搜索</title>
+    <title>观云·网盘搜索</title>
+    <!-- <link rel="shortcut icon"href="{{ static_url('img/logo.sm.ico') }}"> -->
     <link rel="stylesheet" href="{{ static_url('bootstrap/css/bootstrap.min.css') }}">
     <script src="{{ static_url('script/jquery.min.js') }}"></script>
     <script src="{{ static_url('bootstrap/js/bootstrap.min.js') }}"></script>
@@ -45,14 +46,32 @@
     }
   </style>
   <body>
+    <div class="modal fade" id="feedback" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">联系我</h4>
+          </div>
+          <div class="modal-body">
+            <h5>新浪微博:
+              <a href="http://weibo.com/u/5540998006" target="_blank">http://weibo.com/u/5540998006</a>
+            </h5>
+            <h5>电子邮箱:
+              liqueurize@yeah.net
+            </h5>
+          </div>
+        </div>
+      </div>
+    </div>
     <div id="indexBlock" ng-show="status=='index'" ng-controller="IndexCtrl">
       <div class="center-block clearfix" style="width:35%;padding-top:70px;" ng-show="status=='index'">
-        <h3 style="color:#666">网盘搜索</h3>
+        <h3 style="color:#666">观云·网盘搜索</h3>
         <h5 class="text-muted">至今收录 {$ source_count $} 个资源</h5>
         <form ng-submit="submit(queryForm.$valid)" name="queryForm">
           <div class="form-group">
             <div class="input-group">
-              <input class="form-control" type="text" ng-model="$parent.query_string" ng-pattern="/\S/i"
+              <input class="form-control" type="text" ng-model="$parent.query_string"
               name="query_string" required>
               <span class="input-group-btn">
                 <button class="btn btn-primary search-btn" type="submit" data-loading-text="搜索中">搜索</button>
@@ -67,7 +86,7 @@
       <nav class="navbar navbar-default">
         <div class="container-fluid">
           <div class="navbar-header">
-            <a class="navbar-brand" href="/">网盘搜索</a>
+            <a class="navbar-brand" href="/">观云·网盘搜索</a>
           </div>
           <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <form class="navbar-form navbar-left" ng-submit="submit(queryForm.$valid)" name="queryForm">
@@ -87,9 +106,6 @@
         <li>
           <span class="text-muted">搜索耗时 {$ cost_time $}</span>
         </li>
-        <li>
-          <span class="text-muted">数据处理耗时 {$ data_time $}</span>
-        </li>
       </ul>
       <ul id="result-list" class="list-unstyled" style="padding-left:100px;padding-bottom:20px;">
         <li ng-repeat="item in paging.objects">
@@ -97,11 +113,11 @@
           <span class="" style="color:#ccc">{$ item.time $}</span>
         </li>
         <li ng-show="paging.is_empty">
-          <h4 style="color:#333">没有找到资源</h4>
+          <h4 style="color:#333">Σ( ° △ °|||)︴没有找到资源</h4>
           <ul>
             <li>增加关键字</li>
             <li>
-              <a href="mailto:liqueurize@yeah.net">反馈作者</a>
+              <a data-toggle="modal" data-target="#feedback" style="cursor:pointer;">反馈作者</a>
             </li>
           </ul>
         </li>
@@ -111,11 +127,11 @@
             <hr>
             <div class="form-group">
               <button type="button" class="btn btn-default btn-sm" ng-disabled="paging.page == 1"
-                ng-click="turnPage($parent.query_string, 1)" data-loading-text="首页" disabled="disabled">首页</button>
+                ng-click="turnPage(1)" data-loading-text="首页" disabled="disabled">首页</button>
             </div>
             <div class="form-group">
               <button type="button" class="btn btn-default btn-sm" ng-disabled="paging.previous_page == null"
-                ng-click="turnPage($parent.query_string, paging.previous_page)" data-loading-text="上一页">上一页</button>
+                ng-click="turnPage(paging.previous_page)" data-loading-text="上一页">上一页</button>
             </div>
             <div class="form-group">
               第 <input ng-model="$parent.paging.page" ng-trim="true" type="text" name="page" class="form-control input-sm" ng-pattern="/\d/i"
@@ -123,11 +139,11 @@
             </div>
             <div class="form-group">
               <button type="button" class="btn btn-default btn-sm" ng-disabled="paging.next_page == null"
-                ng-click="turnPage($parent.query_string, paging.next_page)" data-loading-text="下一页">下一页</button>
+                ng-click="turnPage(paging.next_page)" data-loading-text="下一页">下一页</button>
             </div>
             <div class="form-group">
               <button type="button" class="btn btn-default btn-sm" ng-disabled="paging.page == paging.page_num"
-                ng-click="turnPage($parent.query_string, paging.page_num)" data-loading-text="末页">末页</button>
+                ng-click="turnPage(paging.page_num)" data-loading-text="末页">末页</button>
             </div>
           </form>
         </li>
@@ -135,22 +151,33 @@
     </div>
     <div class="footer clearfix">
       <hr style="margin:0;">
-      <div style="width:35%;margin-left:auto;margin-right:auto;padding-top:10px;padding-bottom:10px;" class="clearfix">
-        <div style="float:left;width:40%;text-align: left;">
-          <div style="font-weight: bold;">网盘搜索</div>
-          <span>目前网盘搜索是一个基于百度网盘资源的搜索引擎，所有资源来源于爬虫24小时从百度网盘自动抓取，仅提供资源相关信息，不存储任何资源文件。</span>
-        </div>
-        <div style="float:left;width:30%;text-align:left;margin-left:20px;">
-          <ul>
-            <li><a href="">API</a></li>
-            <li><a href="mailto:liqueurize@yeah.net">意见反馈</a></li>
-            <li><a href="">捐赠</a></li>
+      <ul style="width:55%;padding-top:20px;margin-left:auto;margin-right:auto;" class="list-unstyled">
+        <li style="width:35%;text-align:left;float:left;">
+          <div style="font-weight:bold;">简介</div>
+          <span>目前观云是一个基于百度网盘资源的搜索引擎，所有资源来源于爬虫24小时从百度网盘自动抓取，仅提供资源相关信息，不存储任何资源文件。</span>
+        </li>
+        <li style="width:35%;text-align:left;float:left;padding-left:20px;">
+          <div style="font-weight:bold;">分享</div>
+          <div class="bdsharebuttonbox"><a href="#" class="bds_more" data-cmd="more"></a><a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a><a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a><a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a><a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a><a href="#" class="bds_bdhome" data-cmd="bdhome" title="分享到百度新首页"></a><a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a><a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a><a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博"></a><a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网"></a><a href="#" class="bds_mshare" data-cmd="mshare" title="分享到一键分享"></a><a href="#" class="bds_kaixin001" data-cmd="kaixin001" title="分享到开心网"></a></div>
+          <script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"观云网盘搜索网罗百度网盘优秀共享资源，为您提供极速便捷的搜索体验(๑•̀ㅂ•́)و✧","bdMini":"2","bdMiniList":false,"bdPic":"http://download.easyicon.net/png/1156945/72/","bdStyle":"0","bdSize":"24"},"share":{},"image":{"viewList":["tsina","weixin","sqq","tieba","bdhome","douban","qzone","tqq","renren","mshare","kaixin001"],"viewText":"","viewSize":"24"},"selectShare":{"bdContainerClass":null,"bdSelectMiniList":["tsina","weixin","sqq","tieba","bdhome","douban","qzone","tqq","renren","mshare","kaixin001"]}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+        </li>
+        <li style="width:30%;text-align:left;float:left;">
+          <ul style="margin:0;text-align:left;padding-left:20px;">
+            <li><a data-toggle="modal" data-target="#feedback" style="cursor:pointer;">意见反馈</a></li>
+            <li><a href="/donate">捐赠</a></li>
           </ul>
-        </div>
+        </li>
       </div>
     </div>
   </body>
   <script>
+    function btnLoading(selector, is_loading, scope){
+      if(is_loading)
+        $(selector).button('loading');
+      else
+        $(selector).button('reset');
+    }
+
     var app = angular.module('result', ['ngSanitize']);
 
     app.config(['$interpolateProvider', function($interpolateProvider) {
@@ -158,12 +185,6 @@
       $interpolateProvider.endSymbol('$}');
     }]);
 
-    function btnLoading(selector, is_loading, scope){
-      if(is_loading)
-        $(selector).button('loading');
-      else
-        $(selector).button('reset');
-    }
 
     app.filter('safe', function ($sce) {
       return function(input){
@@ -175,9 +196,9 @@
       $scope.status = "index";
       $scope.query_string = "";
 
-      $scope.query = function(query_string, page){
+      $scope.query = function(page){
         btnLoading(".search-btn", true);
-        $http.get(urljoin('/query', {query_string:query_string, page:page})).
+        $http.get(urljoin('/search', {query_string:$scope.query_string, page:page})).
           success(function(ret, status, headers, config){
           $scope.status = "result";
           $scope.cost_time = ret.cost_time;
@@ -197,7 +218,7 @@
     app.controller("IndexCtrl", function($scope, $http){
       $scope.submit = function(is_valid){
         if(is_valid){
-          $scope.$parent.query($scope.$parent.query_string, 1);
+          $scope.$parent.query(1);
         }
       }
 
@@ -212,17 +233,17 @@
     app.controller("ResultCtrl", function($scope, $http){
       $scope.submit = function(is_valid){
         if(is_valid){
-          $scope.$parent.query($scope.$parent.query_string, 1);
+          $scope.$parent.query(1);
         }
       }
 
-      $scope.turnPage = function(query_string, page){
-        $scope.$parent.query(query_string, page);
+      $scope.turnPage = function(page){
+        $scope.$parent.query(page);
       }
 
       $scope.pagingFormSubmit = function(is_valid){
         if(is_valid){
-          $scope.$parent.query($scope.$parent.query_string, $scope.$parent.paging.page);
+          $scope.$parent.query($scope.$parent.paging.page);
         }
       }
     });

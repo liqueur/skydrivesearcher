@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="result" ng-controller="MainCtrl">
+  <head>
+    <meta charset="UTF-8">
+    <title>观云·网盘搜索·捐赠</title>
+    <!-- <link rel="shortcut icon"href="{{ static_url('img/logo.sm.ico') }}"> -->
+    <link rel="stylesheet" href="{{ static_url('bootstrap/css/bootstrap.min.css') }}">
+    <script src="{{ static_url('script/jquery.min.js') }}"></script>
+    <script src="{{ static_url('bootstrap/js/bootstrap.min.js') }}"></script>
+  </head>
+  <style>
+    body {
+      margin: 0;
+      overflow-x: hidden;
+    }
+  </style>
+  <body>
+    <div class="center-block clearfix" style="width:50%;padding-top:50px;">
+      <div class="bs-example bs-example-tabs" role="tabpanel" data-example-id="togglable-tabs">
+        <ul id="myTab" class="nav nav-tabs" role="tablist">
+          <li role="presentation" class="active"><a href="#home" id="home-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true">捐赠</a></li>
+          <li role="presentation" class=""><a href="#profile" role="tab" id="profile-tab" data-toggle="tab" aria-controls="profile" aria-expanded="false">捐赠者列表</a></li>
+          <li role="presentation" class=""><a href="#profile" role="tab" id="profile-tab" data-toggle="tab" aria-controls="profile" aria-expanded="false">财报</a></li>
+        </ul>
+        <div id="myTabContent" class="tab-content">
+          <div role="tabpanel" class="tab-pane fade active in" id="home" aria-labelledby="home-tab">
+            <div style="padding-top:20px;color:#333;">
+              <div style="float:right;color:#666;">
+                <img src="{{ static_url('img/donate.jpg') }}" alt="" style="padding:10px;">
+                <p style="text-align:center;">每一枚硬币都对观云意义重大哦</p>
+                <p style="text-align:center;">(image via 萌娘百科)</p>
+              </div>
+              <p style="font-size:14px;">非常感谢您打开捐赠页面，无论您是否准备捐款，由衷感谢您对于观云的支持！</p>
+              <p style="font-size:14px;">观云最开始只是一个大学生心血来潮的爬虫脚本，目的是弥补百度云网盘的搜索功能，让网盘资源<span style="color:red">真正地</span>共享。虽然目前只支持百度云盘搜索，但希望日后随着不断的改善，能够提供其它类型的网盘搜索服务。</p>
+              <p style="font-size:14px;">目前观云搜索服务运行于阿里云香港主机，配置 CPU 1核，内存 1G，数据盘 20G，带宽 1Mbps。每月需支付117元人民币以维持服务器的正常运行，每年花费60元人民币维护万网注册.me域名。尽管这样，作为一个大学生对此还是囊中羞涩。</p>
+              <p style="font-size:14px;">至此，如果您有意愿捐助观云，可以用支付宝钱包扫描下面二维码进行捐助，您会被记录在捐赠者名单中，您的每一笔捐赠具体用途都会在财报中详细说明。支付即时到帐，量力而行。感激不尽！</p>
+              <img src="{{ static_url('img/alipay.jpg') }}" alt="" style="width:180px;height:180px;margin-bottom:30px;">
+              <p>via <a href="http://weibo.com/u/5540998006" target="_blank">Liqueur</a></p>
+            </div>
+          </div>
+          <div role="tabpanel" class="tab-pane fade" id="profile" aria-labelledby="profile-tab">
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script>
+    function btnLoading(selector, is_loading, scope){
+      if(is_loading)
+        $(selector).button('loading');
+      else
+        $(selector).button('reset');
+    }
+
+    var app = angular.module('result', ['ngSanitize']);
+
+    app.config(['$interpolateProvider', function($interpolateProvider) {
+      $interpolateProvider.startSymbol('{$');
+      $interpolateProvider.endSymbol('$}');
+    }]);
+
+
+    app.filter('safe', function ($sce) {
+      return function(input){
+        return $sce.trustAsHtml(input);
+      }
+    });
+
+    app.controller("MainCtrl", function($scope, $http){
+      $scope.status = "index";
+      $scope.query_string = "";
+
+      $scope.query = function(page){
+        btnLoading(".search-btn", true);
+        $http.get(urljoin('/search', {query_string:$scope.query_string, page:page})).
+          success(function(ret, status, headers, config){
+          $scope.status = "result";
+          $scope.cost_time = ret.cost_time;
+          $scope.data_time = ret.data_time;
+          $scope.total_count = ret.total_count;
+          $scope.paging = ret.paging;
+          btnLoading(".search-btn", false);
+          window.location.href = "#top";
+        }).
+          error(function(ret, status, headers, config){
+          btnLoading(".search-btn", false);
+          window.location.href = "#top";
+        });
+      }
+    });
+
+    app.controller("IndexCtrl", function($scope, $http){
+      $scope.submit = function(is_valid){
+        if(is_valid){
+          $scope.$parent.query(1);
+        }
+      }
+
+      $http.get('/info').
+        success(function(ret, status, headers, config){
+        $scope.source_count = ret.source_count;
+      }).
+        error(function(ret, status, headers, config){
+      });
+    });
+
+    app.controller("ResultCtrl", function($scope, $http){
+      $scope.submit = function(is_valid){
+        if(is_valid){
+          $scope.$parent.query(1);
+        }
+      }
+
+      $scope.turnPage = function(page){
+        $scope.$parent.query(page);
+      }
+
+      $scope.pagingFormSubmit = function(is_valid){
+        if(is_valid){
+          $scope.$parent.query($scope.$parent.paging.page);
+        }
+      }
+    });
+  </script>
+</html>

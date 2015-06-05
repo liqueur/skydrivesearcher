@@ -22,6 +22,9 @@ source_count = None
 logger = gen_logger(__file__, 'w')
 
 def traffic_counter(func):
+    '''
+    :desc:流量统计
+    '''
     @wraps(func)
     def wrapper(*args, **kwargs):
         db.monitor.update({}, {'$inc':{'traffic':1}})
@@ -39,7 +42,6 @@ def rebuild_indexing():
     source_count = db.source.count()
     logger.info('收录数据 {} 条'.format(source_count))
     writer = IndexWriter(INDEXDIR, ANALYZER, True, IndexWriter.MaxFieldLength.UNLIMITED)
-    # writer.setRAMBufferSizeMB(16)
     counter = 0
     for item in items:
         doc = Document()
@@ -50,24 +52,27 @@ def rebuild_indexing():
         counter += 1
         if counter % 10000 == 0:
             logger.info('计数 {} / {}'.format(counter, source_count))
-            # writer.commit()
 
     writer.close()
     cost_time = '%.3f s' % (time() - start_time)
     logger.info('重构索引完毕，耗时 {}'.format(cost_time,))
 
 class IndexHandler(tornado.web.RequestHandler):
+    '''
+    :desc:首页
+    '''
     @traffic_counter
     def get(self):
-        kwargs = dict(
-            source_count=source_count,
-        )
-        self.render('index.html', **kwargs)
+        self.render('index.html')
 
-class QueryHandler(tornado.web.RequestHandler):
+class SearchHandler(tornado.web.RequestHandler):
+    '''
+    :desc:搜索
+    '''
     @traffic_counter
     @tornado.web.asynchronous
     def get(self):
+        # 转义字符前加上\
         def replace(matched):
             return '\{escape}'.format(escape=matched.group('escape'))
         query_string = self.get_argument('query_string', '').strip()
@@ -77,13 +82,17 @@ class QueryHandler(tornado.web.RequestHandler):
         else:
             # 转义特殊字符
             query_string = re.sub(r'(?P<escape>[-+!\\():^\]\[{}~*?])', replace, query_string)
+            # 解析用户查询
             query = QueryParser(Version.LUCENE_30, 'title', ANALYZER).parse(query_string)
             scorer = QueryScorer(query, 'title')
+            # 设置高亮器
             highlighter = Highlighter(FORMATTER, scorer)
             highlighter.setTextFragmenter(SimpleSpanFragmenter(scorer))
             start_time = time()
+            # 开始搜索
             total_hits = SEARCHER.search(query, RESULT_MAX_NUM)
-            cost_time = '%.3f ms' % ((time() - start_time) * 1000,)
+            cost_time = '%.3f 秒' % ((time() - start_time),)
+            # 符合条件的资源数量
             total_count = len(total_hits.scoreDocs)
 
             t1 = time()
@@ -108,7 +117,7 @@ class QueryHandler(tornado.web.RequestHandler):
 
             paging['objects'] = map(wrap, paging['objects'])
 
-            data_time = '%.3f ms' % ((time() - t1) * 1000,)
+            data_time = '%.3f 秒' % ((time() - t1),)
 
             kwargs = dict(
                 cost_time=cost_time,
@@ -195,6 +204,10 @@ class IndexInfoHandler(tornado.web.RequestHandler):
         self.write(json.dumps(data))
         self.finish()
 
+class DonateHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render('donate.html')
+
 class TestChineseHandler(tornado.web.RequestHandler):
     def post(self):
         query_string = self.get_argument('query_string')
@@ -228,7 +241,8 @@ application = tornado.web.Application([
     (r'/', IndexHandler),
     (r'/testchinese', TestChineseHandler),
     (r'/info', IndexInfoHandler),
-    (r'/query', QueryHandler),
+    (r'/donate', DonateHandler),
+    (r'/search', SearchHandler),
     (r'/admin', OverlookHandler),
     (r'/admin/overlook', OverlookHandler),
     (r'/admin/overlook/chart', OverlookChartHandler),
