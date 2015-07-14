@@ -3,6 +3,7 @@
 import lucene
 from lucene import *
 from pymongo import MongoClient
+from os.path import abspath
 
 initVM()
 
@@ -35,6 +36,6 @@ TEST_CHINESE_CONTENT = '''
 # ANALYZER = CJKAnalyzer(Version.LUCENE_30)
 ANALYZER = SmartChineseAnalyzer(Version.LUCENE_30)
 
-INDEXDIR = SimpleFSDirectory(File('index'))
+INDEXDIR = SimpleFSDirectory(File(abspath('index')))
 SEARCHER = IndexSearcher(INDEXDIR)
 FORMATTER = SimpleHTMLFormatter("<span class=\'highlight\'>", "</span>")

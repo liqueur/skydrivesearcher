@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 #coding:utf-8
 
 import gevent.monkey
@@ -44,9 +45,6 @@ def fetch_follow(urls, success, remain_try_times=3):
     urls = [job.value.url for job in jobs if isinstance(job.value, Failure)]
     success.extend([job.value for job in jobs if isinstance(job.value, Success)])
     logger.debug('fetch_follow remain {}'.format(len(urls)))
-
-    for j in jobs:
-        logger.error(type(j.exception))
 
     if (not remain_try_times) or (not urls):
         logger.debug('losted {}'.format(urls))
