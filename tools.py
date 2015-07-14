@@ -48,3 +48,12 @@ def pagination(seq, page, page_size):
                 previous_page=previous_page,
                 next_page=next_page,
                 is_empty=is_empty)
+
+class Success(object):
+    def __init__(self, url, value):
+        self.url = url
+        self.value = value
+
+class Failure(object):
+    def __init__(self, url):
+        self.url = url

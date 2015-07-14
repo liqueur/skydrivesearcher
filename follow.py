@@ -1,170 +1,129 @@
-#!/usr/bin/env python
 #coding:utf-8
 
-from __future__ import unicode_literals
-from twisted.internet import defer, reactor
-from twisted.web.client import getPage
-from time import time
-from functools import partial
-from tools import gen_logger
-from settings import *
-import json
-import logging
-import re
+import gevent.monkey
+gevent.monkey.patch_all()
+import gevent
 import requests
+import json
+import re
+from time import time
+from tools import gen_logger, Success, Failure
+from settings import *
 
 logger = gen_logger(__file__, 'w')
-start = None
 
 def finish():
-    _time = int(time())
+    '''
+    :desc:任务结束日志记录
+    '''
+    ctime = int(time())
     count = len(db.user.find_one({'origin':'baiduyun'}, {'uk_list':1})['uk_list'])
     origin = 'baiduyun'
-    db.user_log.insert({'ctime':_time, 'count':count, 'origin':origin})
-    reactor.stop()
+    db.user_log.insert({'ctime':ctime, 'count':count, 'origin':origin})
 
-def loop(resp, data, success, failure, repeat, turn=None, prepare=None):
-    total_success = len(success) - len(data)
-    total_failure = len(data)
-    logger.debug('total success: {}'.format(total_success))
-    logger.debug('total failure: {}'.format(total_failure))
-    if not data:
-        if (turn is None) or (prepare is None) or (total_success == 0):
-            logger.debug('cost time: {}'.format(time() - start))
-            finish()
-        else:
-            logger.debug('turn {}'.format(turn.func.__name__))
-            _data, _success, _failure = prepare(success)
-            turn(_data, _success, _failure)
+def fetch_follow(urls, success, remain_try_times=3):
+    '''
+    :desc:采集订阅用户
+    :param urls:需要采集的url列表
+    :param success:成功采集的数据
+    :param remain_try_times:剩余尝试次数
+    '''
+    def fetch(url):
+        try:
+            resp = requests.get(url, timeout=15)
+            fans = json.loads(resp.text)
+            follow_list = [x['follow_uk'] for x in fans['follow_list']]
+            logger.debug('fetch_follow {}'.format(url))
+            return Success(url, follow_list)
+        except KeyError as e:
+            logger.error('fetch_follow {} {}'.format(e, url))
+            return Failure(url)
+
+    jobs = [gevent.spawn(fetch, url) for url in urls]
+    gevent.joinall(jobs)
+    urls = [job.value.url for job in jobs if isinstance(job.value, Failure)]
+    success.extend([job.value for job in jobs if isinstance(job.value, Success)])
+    logger.debug('fetch_follow remain {}'.format(len(urls)))
+
+    for j in jobs:
+        logger.error(type(j.exception))
+
+    if (not remain_try_times) or (not urls):
+        logger.debug('losted {}'.format(urls))
+        # 采集失败url入库
+        for url in urls:
+            db.losted.insert({'url':url, 'handler':'follow.fetch_follow', 'ctime':int(time())})
+
+        # 新采集用户id入库
+        for item in success:
+            db.user.update({'origin':'baiduyun'},
+                           {'$addToSet':{'uk_list':{'$each':item.value}}},
+                           True)
     else:
-        logger.debug('repeat {}'.format(repeat.func.__name__))
-        repeat(data, success, failure)
+        # 递归采集直至url列表全部采集成功或耗尽尝试次数
+        fetch_follow(urls, success, remain_try_times - 1)
 
-def fetch_follow(data, success=None, failure=None, limit=None, failure_limit=3):
-    if success is None: success = {x: None for x in data}
-    if failure is None: failure = {}
-    def gen_defer(url):
-        def callback(resp):
-            fans = json.loads(resp)
-            try:
-                success[url] = [x['follow_uk'] for x in fans['follow_list']]
-                db.user.update({'origin':'baiduyun'},
-                               {'$addToSet':{'uk_list':{'$each':success[url]}}},
-                               True)
-                data.remove(url)
-                logger.debug(success[url])
-            except KeyError, e:
-                logger.error('{} {} {}'.format(e, url, resp))
-                success.pop(url)
-                data.remove(url)
+def fetch_total_count(urls, success, remain_try_times=3):
+    '''
+    :desc:采集用户订阅总数
+    :param urls:需要采集的url列表
+    :param success:成功采集的数据
+    :param remain_try_times:剩余尝试次数
+    '''
+    def fetch(url):
+        try:
+            resp = requests.get(url, timeout=15)
+            total_count = json.loads(resp.text)['total_count']
+            # logger.debug('fetch_total_count count {}'.format(total_count))
+            return Success(url, total_count)
+        except Exception, e:
+            logger.error('fetch_total_count {} {}'.format(e, url))
+            return Failure(url)
 
-        def errback(err):
-            logger.error('{} {}'.format(err, url))
-            failure_num = failure.get(url, 0)
-            if failure_num >= failure_limit:
-                logger.error('exhaust try times: {}'.format(url))
-                success.pop(url)
-                data.remove(url)
-            else:
-                failure[url] = failure_num + 1
-                data.remove(url)
-                data.append(url)
+    jobs = [gevent.spawn(fetch, url) for url in urls]
+    gevent.joinall(jobs)
 
-        d = getPage(url.encode('utf-8'), timeout=15)
-        d.addCallbacks(callback, errback)
 
-        return d
+    urls = [job.value.url for job in jobs if isinstance(job.value, Failure)]
+    success.extend([job.value for job in jobs if isinstance(job.value, Success)])
+    logger.debug('fetch_total_count remain {}'.format(len(urls)))
 
-    def prepare(_success):
-        _data = []
-        for url, follow_list in _success.iteritems():
-            _data.extend([FOLLOW_URL.format(uk=uk, start=0).encode('utf-8') for uk in follow_list])
+    if (not remain_try_times) or (not urls):
+        logger.debug('losted {}'.format(urls))
+        for url in urls:
+            db.losted.insert({'url':url, 'handler':'follow.fetch_total_count', 'ctime':int(time())})
 
-        _data = list(set(_data))
-        _success = dict.fromkeys(_data, None)
-        _failure = {}
-
-        return _data, _success, _failure
-
-    repeat = partial(fetch_follow, limit=limit, failure_limit=failure_limit)
-
-    dl = defer.DeferredList([gen_defer(url) for url in data[:limit]])
-    dl.addCallbacks(loop, callbackArgs=[data, success, failure, repeat, None, None])
-
-def fetch_total_count(data, success=None, failure=None, limit=None, failure_limit=3):
-    if success is None: success = {x: None for x in data}
-    if failure is None: failure = {}
-    def gen_defer(url):
-        def callback(resp):
-            fans = json.loads(resp)
-            try:
-                success[url] = fans['total_count']
-                data.remove(url)
-                logger.debug('total count: {}'.format(fans['total_count']))
-            except KeyError, e:
-                logger.error('{} {} {}'.format(e, url, resp))
-                success.pop(url)
-                data.remove(url)
-
-        def errback(err):
-            logger.error('{} {}'.format(err, url))
-            failure_num = failure.get(url, 0)
-            if failure_num >= failure_limit:
-                logger.error('exhaust try times: {}'.format(url))
-                success.pop(url)
-                data.remove(url)
-            else:
-                failure[url] = failure_num + 1
-                data.remove(url)
-                data.append(url)
-
-        d = getPage(url, timeout=15)
-        d.addCallbacks(callback, errback)
-
-        return d
-
-    def prepare(_success):
-        _data = []
-        for url, total_count in _success.iteritems():
-            if total_count > 0:
-                uk = re.findall(r'query_uk=(\d+)', url)[0]
-                _data.extend([FOLLOW_URL.format(uk=uk, start=start)
-                    for start in range(0, total_count, 24)])
-
-        _success = dict.fromkeys(_data, None)
-        _failure = {}
-        return _data, _success, _failure
-
-    repeat = partial(fetch_total_count, limit=limit, failure_limit=failure_limit)
-    turn = partial(fetch_follow, limit=limit, failure_limit=failure_limit)
-
-    dl = defer.DeferredList([gen_defer(url) for url in data[:limit]])
-    dl.addCallbacks(loop, callbackArgs=[data, success, failure, repeat, turn, prepare])
+        urls = []
+        for item in success:
+            if item.value > 0:
+                uk = re.findall(r'query_uk=(\d+)', item.url)[0]
+                urls.extend([FOLLOW_URL.format(uk=uk, start=start)
+                    for start in range(0, item.value, 24)])
+        return urls
+    else:
+        return fetch_total_count(urls, success, remain_try_times - 1)
 
 def run():
-    global start
-    start = time()
     logger.info('run follow')
     user_count = len(db.user.find_one({'origin':'baiduyun'}, {'uk_list':1})['uk_list'])
     follow_offset = int(db.status.find_one({'origin':'baiduyun'}, {'follow_offset':1})['follow_offset'])
     if follow_offset + FOLLOW_LIMIT >= user_count:
         logger.debug('all done')
-        return -1
     else:
-        data = [FOLLOW_URL.format(uk=uk, start=0).encode('utf-8') for uk in
+        urls = [FOLLOW_URL.format(uk=uk, start=0).encode('utf-8') for uk in
                 db.user.find_one({'origin':'baiduyun'})['uk_list'][follow_offset:follow_offset+FOLLOW_LIMIT]]
         try:
-            resp = requests.get(data[0]).content
-            errno = json.loads(resp)['errno']
+            resp = requests.get(urls[0])
+            errno = json.loads(resp.text)['errno']
             if errno == 0:
                 db.status.update({'origin':'baiduyun'}, {'$inc':{'follow_offset':FOLLOW_LIMIT}})
-                fetch_total_count(data, limit=FOLLOW_LIMIT)
+                urls = fetch_total_count(urls, [], 10)
+                fetch_follow(urls, [], 10)
+                finish()
             else:
                 logger.error('errno: {}'.format(errno))
-                return -1
         except Exception, e:
             logger.error('{}'.format(e))
-            return -1
 
 if __name__ == '__main__':
-    if run() is None: reactor.run()
+    run()

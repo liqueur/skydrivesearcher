@@ -1,171 +1,141 @@
-#!/usr/bin/env python
 #coding:utf-8
 
-from __future__ import unicode_literals
-from twisted.internet import defer, reactor
-from twisted.web.client import getPage
-from time import time
-from functools import partial
-from tools import gen_logger
-from settings import *
-import json
-import logging
-import re
+import gevent.monkey
+gevent.monkey.patch_all()
+import gevent
 import requests
+import json
+import re
+from time import time
+from tools import gen_logger, Success, Failure
+from settings import *
 
 logger = gen_logger(__file__, 'w')
-start = None
 
 def finish():
-    _time = int(time())
+    '''
+    :desc:任务结束日志记录
+    '''
+    ctime = int(time())
     count = db.source.count()
     origin = 'baiduyun'
-    db.source_log.insert({'ctime':_time, 'count':count, 'origin':origin})
-    reactor.stop()
+    db.user_log.insert({'ctime':ctime, 'count':count, 'origin':origin})
 
-def loop(resp, data, success, failure, repeat, turn, prepare):
-    total_success = len(success) - len(data)
-    total_failure = len(data)
-    logger.debug('total success: {}'.format(total_success))
-    logger.debug('total failure: {}'.format(total_failure))
-    if len(data) == 0:
-        if (turn is None) or (prepare is None) or (total_success == 0):
-            logger.debug('cost time: {}'.format(time() - start))
-            finish()
+def fetch_share(urls, success, remain_try_times=3):
+    '''
+    :desc:采集用户分享资源
+    :param urls:需要采集的url列表
+    :param success:成功采集的数据
+    :param remain_try_times:剩余尝试次数
+    '''
+    def gen_link(item):
+        if item['typicalCategory'] < 0:
+            return -1
+        if len(item['shorturl']):
+            return BD_SHORT_SHARE_URL.format(shorturl=item['shorturl'])
         else:
-            logger.debug('turn {}'.format(turn.func.__name__))
-            _data, _success, _failure = prepare(success)
-            turn(_data, _success, _failure)
+            return BD_SHARE_SHARE_URL.format(uk=re.findall(r'uk=(\d+)', url)[0],
+                                             shareid=item['shareId'])
+
+    def fetch(url):
+        try:
+            resp = requests.get(url, timeout=15)
+            shared = json.loads(resp.text)
+            result = [dict(origin='baiduyun',
+                           url=gen_link(x),
+                           title=x['typicalPath'].rsplit('/')[-1],
+                           ctime=x['ctime']) for x in shared['list'] if gen_link(x)]
+            logger.debug('fetch_share {}'.format(url))
+            return Success(url, result)
+        except Exception as e:
+            logger.error('fetch_share {} {}'.format(e, url))
+            return Failure(url)
+
+    jobs = [gevent.spawn(fetch, url) for url in urls]
+    gevent.joinall(jobs)
+    urls = [job.value.url for job in jobs if isinstance(job.value, Failure)]
+    success.extend([job.value for job in jobs if isinstance(job.value, Success)])
+    logger.debug('fetch_share remain {}'.format(len(urls)))
+
+    if (not remain_try_times) or (not urls):
+        logger.debug('losted {}'.format(urls))
+        # 采集失败url入库
+        for url in urls:
+            db.losted.insert({'url':url, 'handler':'share.fetch_share', 'ctime':int(time())})
+
+        # 新采集分享资源入库
+        for item in success:
+            if item.value: db.resource.insert(item.value)
     else:
-        logger.debug('repeat {}'.format(repeat.func.__name__))
-        repeat(data, success, failure)
+        # 递归采集直至url列表全部采集成功或耗尽尝试次数
+        logger.debug('repeat fetch_share')
+        fetch_share(urls, success, remain_try_times - 1)
 
-def fetch_shared(data, success, failure=None, limit=None, failure_limit=3):
-    if success is None: success = {x: None for x in data}
-    if failure is None: failure = {}
-    def gen_defer(url):
-        def callback(resp):
-            shared = json.loads(resp)
-            def gen_link(x):
-                if x['typicalCategory'] < 0:
-                    return -1
-                if len(x['shorturl']):
-                    return BD_SHORT_SHARE_URL.format(shorturl=x['shorturl'])
-                else:
-                    return BD_SHARE_SHARE_URL.format(uk=re.findall(r'uk=(\d+)', url)[0],
-                                               shareid=x['shareId'])
+def fetch_total_count(urls, success, remain_try_times=3):
+    '''
+    :desc:采集用户分享总数
+    :param urls:需要采集的url列表
+    :param success:成功采集的数据
+    :param remain_try_times:剩余尝试次数
+    '''
+    def fetch(url):
+        try:
+            resp = requests.get(url, timeout=15)
+            total_count = json.loads(resp.text)['total_count']
+            logger.debug('fetch_total_count count {}'.format(total_count))
+            return Success(url, total_count)
+        except Exception as e:
+            logger.error('fetch_total_count {} {}'.format(e, url))
+            return Failure(url)
 
-            try:
-                success[url] = [dict(origin='baiduyun',
-                                     url=gen_link(x),
-                                     title=x['typicalPath'].rsplit('/')[-1],
-                                     time=x['ctime']) for x in shared['list'] if gen_link(x) > 0]
-            except KeyError, e:
-                logger.error('KeyError {} {}'.format(e, url))
-            if success[url] and len(success[url]):
-                db.source.insert(success[url])
-            uk = re.findall(r'uk=(\d+)', url)[0]
-            data.remove(url)
+    jobs = [gevent.spawn(fetch, url) for url in urls]
+    gevent.joinall(jobs)
+    urls = [job.value.url for job in jobs if isinstance(job.value, Failure)]
+    success.extend([job.value for job in jobs if isinstance(job.value, Success)])
+    logger.debug('fetch_total_count failure {}'.format(urls))
 
-        def errback(err):
-            logger.error('{} {}'.format(err, url))
-            failure_num = failure.get(url, 0)
-            if failure_num >= failure_limit:
-                logger.error('exhaust try times: {}'.format(url))
-                success.pop(url)
-                data.remove(url)
-            else:
-                failure[url] = failure_num + 1
-                data.remove(url)
-                data.append(url)
+    if (not remain_try_times) or (not urls):
+        logger.debug('losted {}'.format(urls))
+        for url in urls:
+            db.losted.insert({'url':url, 'handler':'share.fetch_total_count', 'ctime':int(time())})
 
-        d = getPage(url, timeout=15)
-        d.addCallbacks(callback, errback)
+        urls = []
+        for item in success:
+            if item.value == 0: item.value = 1
 
-        return d
+            uk = re.findall(r'query_uk=(\d+)', item.url)[0]
+            urls.extend([RECORD_URL.format(uk=uk, page=page).encode('utf-8')
+                for page in range(1, item.value / 60 + int(item.value % 60 > 0) + 1)])
 
-    repeat = partial(fetch_shared, limit=limit, failure_limit=failure_limit)
-
-    dl = defer.DeferredList([gen_defer(url) for url in data[:limit]])
-    dl.addCallbacks(loop, callbackArgs=[data, success, failure, repeat, None, None])
-
-def fetch_total_count(data, success=None, failure=None, limit=None, failure_limit=3):
-    if success is None: success = {x: None for x in data}
-    if failure is None: failure = {}
-    def gen_defer(url):
-        def callback(resp):
-            shared = json.loads(resp)
-            try:
-                logger.debug('total_count: {}'.format(shared['total_count']))
-                success[url] = shared['total_count']
-                data.remove(url)
-            except KeyError:
-                success.pop(url)
-                data.remove(url)
-
-        def errback(err):
-            logger.error('{} {}'.format(err, url))
-            failure_num = failure.get(url, 0)
-            if failure_num >= failure_limit:
-                logger.error('exhaust try times: {}'.format(url))
-                success.pop(url)
-                data.remove(url)
-            else:
-                failure[url] = failure_num + 1
-                data.remove(url)
-                data.append(url)
-
-        d = getPage(url, timeout=15)
-        d.addCallbacks(callback, errback)
-
-        return d
-
-    def prepare(_success):
-        _data = []
-        for url, total_count in _success.iteritems():
-            if total_count == 0:
-                total_count = 1
-            uk = re.findall(r'query_uk=(\d+)', url)[0]
-            _data.extend([RECORD_URL.format(uk=uk, page=page).encode('utf-8')
-                for page in range(1, total_count / 60 + int(total_count % 60 > 0) + 1)])
-
-        _success = {x: None for x in _data}
-        _failure = {}
-        return _data, _success, _failure
-
-    repeat = partial(fetch_total_count, limit=limit, failure_limit=failure_limit)
-    turn = partial(fetch_shared, limit=limit, failure_limit=failure_limit)
-
-    dl = defer.DeferredList([gen_defer(url) for url in data[:limit]])
-    dl.addCallbacks(loop, callbackArgs=[data, success, failure, repeat, turn, prepare])
+        return urls
+    else:
+        logger.debug('repeat fetch_total_count')
+        return fetch_total_count(urls, success, remain_try_times - 1)
 
 def run():
-    global start
-    start = time()
     logger.info('run share')
     user_count = len(db.user.find_one({'origin':'baiduyun'}, {'uk_list':1})['uk_list'])
     share_offset = int(db.status.find_one({'origin':'baiduyun'}, {'share_offset':1})['share_offset'])
     if share_offset + SHARE_LIMIT >= user_count:
         logger.debug('all done')
-        return -1
     else:
         uk_list = db.user.find_one({'origin':'baiduyun'})['uk_list']
-        data = [SHARE_URL.format(uk=uk).encode('utf-8') for uk in uk_list[share_offset:share_offset+SHARE_LIMIT]]
+        urls = [SHARE_URL.format(uk=uk).encode('utf-8') for uk in uk_list[share_offset:share_offset+SHARE_LIMIT]]
         try:
-            resp = requests.get(data[0]).content
-            errno = json.loads(resp)['errno']
+            resp = requests.get(urls[0])
+            errno = json.loads(resp.text)['errno']
             if errno == 0:
                 db.status.update({'origin':'baiduyun'}, {'$inc':{'share_offset':SHARE_LIMIT}})
-                fetch_total_count(data, limit=SHARE_LIMIT)
+                urls = fetch_total_count(urls, [], 10)
+                fetch_share(urls, [], 10)
+                finish()
             elif errno < 0:
-                logger.error('errno: {} {}'.format(errno, data[0]))
+                logger.error('errno: {}'.format(errno))
             else:
                 db.user.update({'origin':'baiduyun'}, {'$pull':{'uk_list':uk_list[share_offset]}})
                 logger.debug('pull uk {}'.format(uk_list[share_offset]))
-                return -1
         except Exception, e:
             logger.error('{}'.format(e))
-            return -1
 
 if __name__ == '__main__':
-    if run() is None: reactor.run()
+    run()

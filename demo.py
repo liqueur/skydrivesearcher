@@ -1,9 +1,28 @@
 #coding:utf-8
 
-import re
+import gevent.monkey
+gevent.monkey.patch_socket()
+import gevent
+import requests
+from tools import gen_logger, Success, Failure
+from IPython import embed
 
-def replace(matched):
-    return '\{escape}'.format(escape=matched.group('escape'))
+logger = gen_logger(__file__, 'w')
 
-rs = re.sub(r'(?P<escape>[-+!\\():^\]\[{}~*?])', replace, '[jojo]')
-print rs
+d = dict.fromkeys('abc', None)
+
+def run():
+    def fetch(i):
+        # try:
+        if i % 2 == 0: raise KeyError
+        logger.debug('fetch {}'.format(i))
+        return Success(i, i)
+        # except Exception as e:
+            # logger.error('fetch {}'.format(i))
+            # return Failure(i)
+
+    jobs = [gevent.spawn(fetch, i) for i in range(10)]
+    gevent.joinall(jobs)
+    embed()
+
+run()
