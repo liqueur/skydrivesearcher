@@ -12,7 +12,7 @@ from tools import gen_logger, pagination
 from functools import wraps
 
 logger = gen_logger(__file__, 'w')
-SEARCHER = IndexSearcher(INDEXDIR)
+SEARCHER = IndexSearcher(INDEX_DIR)
 
 def traffic_counter(func):
     '''
@@ -20,7 +20,7 @@ def traffic_counter(func):
     '''
     @wraps(func)
     def wrapper(*args, **kwargs):
-        db.monitor.update({}, {'$inc':{'traffic':1}})
+        db.monitor.update({}, {'$inc':{'traffic':1}}, True)
         return func(*args, **kwargs)
     return wrapper
 
@@ -105,7 +105,7 @@ class OverlookChartHandler(tornado.web.RequestHandler):
         chartname = self.get_argument('chartname', None)
         log = {
             'user': list(db.user_log.find()),
-            'source': list(db.source_log.find()),
+            'source': list(db.resource_log.find()),
             'traffic': list(db.traffic_log.find()),
         }.get(chartname, None)
         if log is None: self.send_error(400)
@@ -200,8 +200,8 @@ class DonateHandler(tornado.web.RequestHandler):
 
 settings = dict(
     debug=True,
-    template_path='template',
-    static_path='static',
+    template_path=TEMPLATE_PATH,
+    static_path=STATIC_PATH,
 )
 
 application = tornado.web.Application([

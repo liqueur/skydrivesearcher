@@ -1,7 +1,7 @@
 #coding:utf-8
 
 from lucene import *
-from settings import db, INDEXDIR, ANALYZER
+from settings import db, INDEX_DIR, ANALYZER
 from tools import gen_logger, pagination
 from time import time
 
@@ -16,7 +16,7 @@ def index():
     items = db.resource.find()
     source_count = db.resource.count()
     logger.info('收录数据 {} 条'.format(source_count))
-    writer = IndexWriter(INDEXDIR, ANALYZER, True, IndexWriter.MaxFieldLength.UNLIMITED)
+    writer = IndexWriter(INDEX_DIR, ANALYZER, True, IndexWriter.MaxFieldLength.UNLIMITED)
     counter = 0
     for item in items:
         doc = Document()

@@ -11,7 +11,6 @@ db = MongoClient().sds
 
 FOLLOW_URL = 'http://yun.baidu.com/pcloud/friend/getfollowlist?query_uk={uk}&limit=24&start={start}'
 FOLLOW_LIMIT = 20
-FOLLOW_DELAY = 10 * 60
 
 BD_SHORT_SHARE_URL = 'http://yun.baidu.com/s/{shorturl}'
 BD_SHARE_SHARE_URL = 'http://yun.baidu.com/share/link?uk={uk}&shareid={shareid}'
@@ -20,7 +19,6 @@ SHARE_URL = 'http://yun.baidu.com/pcloud/feed/getsharelist?auth_type=1&start=1&l
 RECORD_URL = 'http://yun.baidu.com/share/homerecord?uk={uk}&page={page}&pagelength=60'
 
 SHARE_LIMIT = 200
-SHARE_DELAY = 2 * 60
 
 LOG_LIMIT = 25
 
@@ -40,7 +38,10 @@ ANALYZER = SmartChineseAnalyzer(Version.LUCENE_30)
 # TESTINDEXDIR = SimpleFSDirectory(File(TESTINDEXPATH))
 # TESTSEARCHER = IndexSearcher(TESTINDEXDIR)
 
-INDEXPATH = join(dirname(abspath(__file__)), 'index')
-INDEXDIR = SimpleFSDirectory(File(INDEXPATH))
+STATIC_PATH = join(dirname(abspath(__file__)), 'static')
+TEMPLATE_PATH = join(dirname(abspath(__file__)), 'template')
+INDEX_PATH = join(dirname(abspath(__file__)), 'index')
+
+INDEX_DIR = SimpleFSDirectory(File(INDEX_PATH))
 
 FORMATTER = SimpleHTMLFormatter("<span class=\'highlight\'>", "</span>")

@@ -2,7 +2,7 @@
 #coding:utf-8
 
 from __future__ import unicode_literals
-from settings import *
+from settings import db
 from time import time
 
 _time = int(time())

@@ -16,6 +16,8 @@ db.user.update({}, {'$set':{'uk_list':[1208824379]}})
 db.resource.remove()
 # 清空失败链接
 db.losted.remove()
+# 初始化监控数据
+db.monitor.update({}, {'traffic':0}, True)
 
 # 清空日志
 db.resource_log.remove()
