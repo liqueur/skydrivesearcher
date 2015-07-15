@@ -16,8 +16,6 @@ from tools import gen_logger, pagination
 from functools import wraps
 from IPython import embed
 
-testindexdir = SimpleFSDirectory(File('testindex'))
-testsearcher = IndexSearcher(testindexdir)
 source_count = None
 logger = gen_logger(__file__, 'w')
 
@@ -37,17 +35,17 @@ def rebuild_indexing():
     '''
     logger.info('重构索引...')
     start_time = time()
-    items = db.source.find()
+    items = db.resource.find()
     global source_count
-    source_count = db.source.count()
+    source_count = db.resource.count()
     logger.info('收录数据 {} 条'.format(source_count))
     writer = IndexWriter(INDEXDIR, ANALYZER, True, IndexWriter.MaxFieldLength.UNLIMITED)
     counter = 0
     for item in items:
         doc = Document()
         doc.add(Field('title', item['title'], Field.Store.YES, Field.Index.ANALYZED))
-        doc.add(Field('url', item['url'], Field.Store.YES, Field.Index.NOT_ANALYZED))
-        doc.add(Field('time', str(item['time']), Field.Store.YES, Field.Index.NOT_ANALYZED))
+        doc.add(Field('url', str(item['url']), Field.Store.YES, Field.Index.NOT_ANALYZED))
+        doc.add(Field('time', str(item['ctime']), Field.Store.YES, Field.Index.NOT_ANALYZED))
         writer.addDocument(doc)
         counter += 1
         if counter % 10000 == 0:
@@ -197,7 +195,7 @@ class IndexHandler(tornado.web.RequestHandler):
 class IndexInfoHandler(tornado.web.RequestHandler):
     @tornado.web.asynchronous
     def get(self):
-        source_count = db.source.count()
+        source_count = db.resource.count()
         data = dict(
             source_count=source_count,
         )
@@ -216,13 +214,13 @@ class TestChineseHandler(tornado.web.RequestHandler):
         highlighter = Highlighter(FORMATTER, scorer)
         highlighter.setTextFragmenter(SimpleSpanFragmenter(scorer))
         start_time = time()
-        total_hits = testsearcher.search(query, RESULT_MAX_NUM)
+        total_hits = TESTSEARCHER.search(query, RESULT_MAX_NUM)
         items = []
 
         for hit in total_hits.scoreDocs:
-            doc = testsearcher.doc(hit.doc)
+            doc = TESTSEARCHER.doc(hit.doc)
             content = doc.get('content')
-            stream = TokenSources.getAnyTokenStream(testsearcher.getIndexReader(), hit.doc, 'content', doc, ANALYZER)
+            stream = TokenSources.getAnyTokenStream(TESTSEARCHER.getIndexReader(), hit.doc, 'content', doc, ANALYZER)
             content = highlighter.getBestFragment(stream, content)
             items.append(content)
 

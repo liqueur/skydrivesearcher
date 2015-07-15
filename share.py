@@ -18,9 +18,9 @@ def finish():
     :desc:任务结束日志记录
     '''
     ctime = int(time())
-    count = db.source.count()
+    count = db.resource.count()
     origin = 'baiduyun'
-    db.user_log.insert({'ctime':ctime, 'count':count, 'origin':origin})
+    db.resource_log.insert({'ctime':ctime, 'count':count, 'origin':origin})
 
 def fetch_share(urls, success, remain_try_times=3):
     '''
@@ -30,8 +30,6 @@ def fetch_share(urls, success, remain_try_times=3):
     :param remain_try_times:剩余尝试次数
     '''
     def gen_link(item):
-        if item['typicalCategory'] < 0:
-            return -1
         if len(item['shorturl']):
             return BD_SHORT_SHARE_URL.format(shorturl=item['shorturl'])
         else:
@@ -45,7 +43,7 @@ def fetch_share(urls, success, remain_try_times=3):
             result = [dict(origin='baiduyun',
                            url=gen_link(x),
                            title=x['typicalPath'].rsplit('/')[-1],
-                           ctime=x['ctime']) for x in shared['list'] if gen_link(x)]
+                           ctime=x['ctime']) for x in shared['list'] if gen_link(x) and x['typicalCategory']]
             logger.debug('fetch_share {}'.format(url))
             return Success(url, result)
         except Exception as e:
