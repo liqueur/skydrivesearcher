@@ -113,18 +113,17 @@ def fetch_total_count(urls, success, remain_try_times=3):
 
 def run():
     logger.info('run share')
-    user_count = len(db.user.find_one({'origin':'baiduyun'}, {'uk_list':1})['uk_list'])
     share_offset = int(db.status.find_one({'origin':'baiduyun'}, {'share_offset':1})['share_offset'])
-    if share_offset + SHARE_LIMIT >= user_count:
-        logger.debug('all done')
+    uk_list = db.user.find_one({'origin':'baiduyun'})['uk_list'][share_offset:share_offset+SHARE_LIMIT]
+    if not uk_list:
+        logger.debug('DONE!')
     else:
-        uk_list = db.user.find_one({'origin':'baiduyun'})['uk_list']
-        urls = [SHARE_URL.format(uk=uk).encode('utf-8') for uk in uk_list[share_offset:share_offset+SHARE_LIMIT]]
+        urls = [SHARE_URL.format(uk=uk).encode('utf-8') for uk in uk_list]
         try:
             resp = requests.get(urls[0])
             errno = json.loads(resp.text)['errno']
             if errno == 0:
-                db.status.update({'origin':'baiduyun'}, {'$inc':{'share_offset':SHARE_LIMIT}})
+                db.status.update({'origin':'baiduyun'}, {'$inc':{'share_offset':len(uk_list)}})
                 urls = fetch_total_count(urls, [], 10)
                 fetch_share(urls, [], 10)
                 finish()

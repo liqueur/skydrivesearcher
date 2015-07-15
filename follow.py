@@ -44,7 +44,8 @@ def fetch_follow(urls, success, remain_try_times=3):
     gevent.joinall(jobs)
     urls = [job.value.url for job in jobs if isinstance(job.value, Failure)]
     success.extend([job.value for job in jobs if isinstance(job.value, Success)])
-    logger.debug('fetch_follow remain {}'.format(len(urls)))
+    logger.debug('fetch_follow success {}'.format(len(success)))
+    logger.debug('fetch_follow fail {}'.format(len(urls)))
 
     if (not remain_try_times) or (not urls):
         logger.debug('losted {}'.format(urls))
@@ -81,10 +82,10 @@ def fetch_total_count(urls, success, remain_try_times=3):
     jobs = [gevent.spawn(fetch, url) for url in urls]
     gevent.joinall(jobs)
 
-
     urls = [job.value.url for job in jobs if isinstance(job.value, Failure)]
     success.extend([job.value for job in jobs if isinstance(job.value, Success)])
-    logger.debug('fetch_total_count remain {}'.format(len(urls)))
+    logger.debug('fetch_total_count success {}'.format(len(success)))
+    logger.debug('fetch_total_count fail {}'.format(len(urls)))
 
     if (not remain_try_times) or (not urls):
         logger.debug('losted {}'.format(urls))
@@ -103,20 +104,19 @@ def fetch_total_count(urls, success, remain_try_times=3):
 
 def run():
     logger.info('run follow')
-    user_count = len(db.user.find_one({'origin':'baiduyun'}, {'uk_list':1})['uk_list'])
     follow_offset = int(db.status.find_one({'origin':'baiduyun'}, {'follow_offset':1})['follow_offset'])
-    if follow_offset + FOLLOW_LIMIT >= user_count:
-        logger.debug('all done')
+    uk_list = db.user.find_one({'origin':'baiduyun'})['uk_list'][follow_offset:follow_offset+FOLLOW_LIMIT]
+    if not uk_list:
+        logger.debug('DONE!')
     else:
-        urls = [FOLLOW_URL.format(uk=uk, start=0).encode('utf-8') for uk in
-                db.user.find_one({'origin':'baiduyun'})['uk_list'][follow_offset:follow_offset+FOLLOW_LIMIT]]
+        urls = [FOLLOW_URL.format(uk=uk, start=0).encode('utf-8') for uk in uk_list]
         try:
             resp = requests.get(urls[0])
             errno = json.loads(resp.text)['errno']
             if errno == 0:
-                db.status.update({'origin':'baiduyun'}, {'$inc':{'follow_offset':FOLLOW_LIMIT}})
-                urls = fetch_total_count(urls, [], 10)
-                fetch_follow(urls, [], 10)
+                db.status.update({'origin':'baiduyun'}, {'$inc':{'follow_offset':len(uk_list)}})
+                urls = fetch_total_count(urls, [])
+                fetch_follow(urls, [])
                 finish()
             else:
                 logger.error('errno: {}'.format(errno))

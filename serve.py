@@ -1,23 +1,18 @@
 #coding:utf-8
 
-import lucene
 import tornado
 import tornado.web
 import tornado.ioloop
-import logging
-import string
 import json
 import re
-from pymongo import MongoClient
 from time import localtime, strftime, time
 from lucene import *
 from settings import *
 from tools import gen_logger, pagination
 from functools import wraps
-from IPython import embed
 
-source_count = None
 logger = gen_logger(__file__, 'w')
+SEARCHER = IndexSearcher(INDEXDIR)
 
 def traffic_counter(func):
     '''
@@ -28,32 +23,6 @@ def traffic_counter(func):
         db.monitor.update({}, {'$inc':{'traffic':1}})
         return func(*args, **kwargs)
     return wrapper
-
-def rebuild_indexing():
-    '''
-    :desc:重构索引
-    '''
-    logger.info('重构索引...')
-    start_time = time()
-    items = db.resource.find()
-    global source_count
-    source_count = db.resource.count()
-    logger.info('收录数据 {} 条'.format(source_count))
-    writer = IndexWriter(INDEXDIR, ANALYZER, True, IndexWriter.MaxFieldLength.UNLIMITED)
-    counter = 0
-    for item in items:
-        doc = Document()
-        doc.add(Field('title', item['title'], Field.Store.YES, Field.Index.ANALYZED))
-        doc.add(Field('url', str(item['url']), Field.Store.YES, Field.Index.NOT_ANALYZED))
-        doc.add(Field('time', str(item['ctime']), Field.Store.YES, Field.Index.NOT_ANALYZED))
-        writer.addDocument(doc)
-        counter += 1
-        if counter % 10000 == 0:
-            logger.info('计数 {} / {}'.format(counter, source_count))
-
-    writer.close()
-    cost_time = '%.3f s' % (time() - start_time)
-    logger.info('重构索引完毕，耗时 {}'.format(cost_time,))
 
 class IndexHandler(tornado.web.RequestHandler):
     '''
@@ -206,28 +175,28 @@ class DonateHandler(tornado.web.RequestHandler):
     def get(self):
         self.render('donate.html')
 
-class TestChineseHandler(tornado.web.RequestHandler):
-    def post(self):
-        query_string = self.get_argument('query_string')
-        query = QueryParser(Version.LUCENE_30, 'content', ANALYZER).parse(query_string)
-        scorer = QueryScorer(query, 'content')
-        highlighter = Highlighter(FORMATTER, scorer)
-        highlighter.setTextFragmenter(SimpleSpanFragmenter(scorer))
-        start_time = time()
-        total_hits = TESTSEARCHER.search(query, RESULT_MAX_NUM)
-        items = []
+# class TestChineseHandler(tornado.web.RequestHandler):
+    # def post(self):
+        # query_string = self.get_argument('query_string')
+        # query = QueryParser(Version.LUCENE_30, 'content', ANALYZER).parse(query_string)
+        # scorer = QueryScorer(query, 'content')
+        # highlighter = Highlighter(FORMATTER, scorer)
+        # highlighter.setTextFragmenter(SimpleSpanFragmenter(scorer))
+        # start_time = time()
+        # total_hits = TESTSEARCHER.search(query, RESULT_MAX_NUM)
+        # items = []
 
-        for hit in total_hits.scoreDocs:
-            doc = TESTSEARCHER.doc(hit.doc)
-            content = doc.get('content')
-            stream = TokenSources.getAnyTokenStream(TESTSEARCHER.getIndexReader(), hit.doc, 'content', doc, ANALYZER)
-            content = highlighter.getBestFragment(stream, content)
-            items.append(content)
+        # for hit in total_hits.scoreDocs:
+            # doc = TESTSEARCHER.doc(hit.doc)
+            # content = doc.get('content')
+            # stream = TokenSources.getAnyTokenStream(TESTSEARCHER.getIndexReader(), hit.doc, 'content', doc, ANALYZER)
+            # content = highlighter.getBestFragment(stream, content)
+            # items.append(content)
 
-        self.render('testchinese.html', content=TEST_CHINESE_CONTENT, items=items)
+        # self.render('testchinese.html', content=TEST_CHINESE_CONTENT, items=items)
 
-    def get(self):
-        self.render('testchinese.html', content=TEST_CHINESE_CONTENT, items=None)
+    # def get(self):
+        # self.render('testchinese.html', content=TEST_CHINESE_CONTENT, items=None)
 
 settings = dict(
     debug=True,
@@ -237,7 +206,7 @@ settings = dict(
 
 application = tornado.web.Application([
     (r'/', IndexHandler),
-    (r'/testchinese', TestChineseHandler),
+    # (r'/testchinese', TestChineseHandler),
     (r'/info', IndexInfoHandler),
     (r'/donate', DonateHandler),
     (r'/search', SearchHandler),
@@ -248,6 +217,5 @@ application = tornado.web.Application([
 ], **settings)
 
 if __name__ == '__main__':
-    # rebuild_indexing()
     application.listen(8888)
     tornado.ioloop.IOLoop.instance().start()
