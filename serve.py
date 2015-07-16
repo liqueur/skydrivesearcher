@@ -134,7 +134,7 @@ class OverlookCSVHandler(tornado.web.RequestHandler):
         csvname = self.get_argument('csvname', None)
         csvinfo = {
             'user':[db.user_log, 'user.log.{}.csv'],
-            'source':[db.source_log, 'source.log.{}.csv'],
+            'resource':[db.resource_log, 'resource.log.{}.csv'],
             'traffic':[db.traffic_log, 'traffic.log.{}.csv'],
         }.get(csvname, None)
         if csvinfo is None: self.send_error(400)
