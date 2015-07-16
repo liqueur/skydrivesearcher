@@ -66,7 +66,7 @@
           </h1>
           <canvas id="user_chart" style="width:100%;height:400px;" class="chart"></canvas>
           <h1 class="page-header" style="margin-top:30px;">资源统计
-            <a class="btn btn-success" style="" href="/admin/overlook/csv?csvname=source">下载CSV</a>
+            <a class="btn btn-success" style="" href="/admin/overlook/csv?csvname=resource">下载CSV</a>
           </h1>
           <canvas id="source_chart" style="width:100%;height:400px;" class="chart"></canvas>
           <h1 class="page-header" style="margin-top:30px;">流量统计
@@ -155,7 +155,7 @@
           new Chart(user_chart).Line(data);
         });
 
-        $http.get('/admin/overlook/chart?chartname=source').
+        $http.get('/admin/overlook/chart?chartname=resource').
           success(function(ret, status, headers, config){
           var data = {
             labels: ret.ctime_list,

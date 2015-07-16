@@ -105,7 +105,7 @@ class OverlookChartHandler(tornado.web.RequestHandler):
         chartname = self.get_argument('chartname', None)
         log = {
             'user': list(db.user_log.find()),
-            'source': list(db.resource_log.find()),
+            'resource': list(db.resource_log.find()),
             'traffic': list(db.traffic_log.find()),
         }.get(chartname, None)
         if log is None: self.send_error(400)
