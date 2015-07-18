@@ -164,9 +164,12 @@ class IndexHandler(tornado.web.RequestHandler):
 class IndexInfoHandler(tornado.web.RequestHandler):
     @tornado.web.asynchronous
     def get(self):
-        source_count = db.resource.count()
+        resource_count = db.resource.count()
+        # last_indexing = db.indexing_log.find().sort({_id:-1}).limit(1)['ctime']
+        # last_indexing=strftime('%Y-%m-%d %H:%M:%S', localtime(last_indexing))
         data = dict(
-            source_count=source_count,
+            resource_count=resource_count,
+            # last_indexing=last_indexing,
         )
         self.write(json.dumps(data))
         self.finish()

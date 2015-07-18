@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 #coding:utf-8
 
 from lucene import *
@@ -14,8 +15,8 @@ def index():
     logger.info('重构索引...')
     start_time = time()
     items = db.resource.find()
-    source_count = db.resource.count()
-    logger.info('收录数据 {} 条'.format(source_count))
+    resource_count = db.resource.count()
+    logger.info('收录数据 {} 条'.format(resource_count))
     writer = IndexWriter(INDEX_DIR, ANALYZER, True, IndexWriter.MaxFieldLength.UNLIMITED)
     counter = 0
     for item in items:
@@ -26,11 +27,13 @@ def index():
         writer.addDocument(doc)
         counter += 1
         if counter % 10000 == 0:
-            logger.info('计数 {} / {}'.format(counter, source_count))
+            logger.info('计数 {} / {}'.format(counter, resource_count))
 
     writer.close()
     cost_time = '%.3f s' % (time() - start_time)
     logger.info('重构索引完毕，耗时 {}'.format(cost_time,))
+    ctime = int(time())
+    db.indexing_log.insert({'ctime':ctime, 'resource_count':resource_count, 'cost_time':cost_time})
 
 if __name__ == '__main__':
     index()

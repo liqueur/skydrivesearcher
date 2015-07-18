@@ -2,7 +2,7 @@
 <html lang="en" ng-app="result" ng-controller="MainCtrl">
   <head>
     <meta charset="UTF-8">
-    <title>观云·网盘搜索</title>
+    <title>网盘搜索·Beta</title>
     <!-- <link rel="shortcut icon"href="{{ static_url('img/logo.sm.ico') }}"> -->
     <link rel="stylesheet" href="{{ static_url('bootstrap/css/bootstrap.min.css') }}">
     <script src="{{ static_url('script/jquery.min.js') }}"></script>
@@ -66,8 +66,9 @@
     </div>
     <div id="indexBlock" ng-show="status=='index'" ng-controller="IndexCtrl">
       <div class="center-block clearfix" style="width:35%;padding-top:70px;" ng-show="status=='index'">
-        <h3 style="color:#666">观云·网盘搜索</h3>
-        <h5 class="text-muted">至今收录 {$ source_count $} 个资源</h5>
+        <h3 style="color:#666">网盘搜索·Beta</h3>
+        <h5 class="text-muted">至今收录 {$ resource_count $} 个资源</h5>
+        <!-- <h5 class="text-muted">最近索引时间 {$ last_indexing $}</h5> -->
         <form ng-submit="submit(queryForm.$valid)" name="queryForm">
           <div class="form-group">
             <div class="input-group">
@@ -86,7 +87,7 @@
       <nav class="navbar navbar-default">
         <div class="container-fluid">
           <div class="navbar-header">
-            <a class="navbar-brand" href="/">观云·网盘搜索</a>
+            <a class="navbar-brand" href="/">网盘搜索·Beta</a>
           </div>
           <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <form class="navbar-form navbar-left" ng-submit="submit(queryForm.$valid)" name="queryForm">
@@ -154,7 +155,7 @@
       <ul style="width:55%;padding-top:20px;margin-left:auto;margin-right:auto;" class="list-unstyled">
         <li style="width:35%;text-align:left;float:left;">
           <div style="font-weight:bold;">简介</div>
-          <span>目前观云是一个基于百度网盘资源的搜索引擎，所有信息来源于爬虫24小时从百度网盘自动抓取，仅提供资源相关信息，不存储任何资源文件。</span>
+          <span>这是一个基于百度网盘资源的搜索引擎，所有信息来源于爬虫24小时从百度网盘自动抓取，仅提供资源相关信息，不存储任何资源文件。</span>
         </li>
         <li style="width:35%;text-align:left;float:left;padding-left:20px;">
           <div style="font-weight:bold;">分享</div>
@@ -164,7 +165,6 @@
         <li style="width:30%;text-align:left;float:left;">
           <ul style="margin:0;text-align:left;padding-left:20px;">
             <li><a data-toggle="modal" data-target="#feedback" style="cursor:pointer;">意见反馈</a></li>
-            <li><a href="/donate">捐赠</a></li>
           </ul>
         </li>
       </div>
@@ -224,7 +224,7 @@
 
       $http.get('/info').
         success(function(ret, status, headers, config){
-        $scope.source_count = ret.source_count;
+        $scope.resource_count = ret.resource_count;
       }).
         error(function(ret, status, headers, config){
       });
