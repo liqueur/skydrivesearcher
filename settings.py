@@ -1,29 +1,16 @@
 #coding:utf-8
 
 import lucene
+import torndb
 from lucene import *
-from pymongo import MongoClient
 from os.path import join, abspath, dirname
 
 initVM()
 
-db = MongoClient().sds
-
-FOLLOW_URL = 'http://yun.baidu.com/pcloud/friend/getfollowlist?query_uk={uk}&limit=24&start={start}'
-FOLLOW_LIMIT = 20
-
-BD_SHORT_SHARE_URL = 'http://yun.baidu.com/s/{shorturl}'
-BD_SHARE_SHARE_URL = 'http://yun.baidu.com/share/link?uk={uk}&shareid={shareid}'
-
-SHARE_URL = 'http://yun.baidu.com/pcloud/feed/getsharelist?auth_type=1&start=1&limit=60&query_uk={uk}'
-RECORD_URL = 'http://yun.baidu.com/share/homerecord?uk={uk}&page={page}&pagelength=60'
-
-SHARE_LIMIT = 200
-
-LOG_LIMIT = 25
+db = torndb.Connection('localhost:3306', 'sds', user='root', password='britten')
 
 RESULT_PAGE_SIZE = 20
-RESULT_MAX_NUM = 5000
+RESULT_MAX_NUM = 10000
 
 TEST_CHINESE_CONTENT = '''
 中华人民共和国
@@ -43,5 +30,6 @@ TEMPLATE_PATH = join(dirname(abspath(__file__)), 'template')
 INDEX_PATH = join(dirname(abspath(__file__)), 'index')
 
 INDEX_DIR = SimpleFSDirectory(File(INDEX_PATH))
+LOG_DIR = join(dirname(abspath(__file__)), 'log')
 
 FORMATTER = SimpleHTMLFormatter("<span class=\'highlight\'>", "</span>")

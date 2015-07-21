@@ -3,14 +3,13 @@
 import logging
 from logging.handlers import TimedRotatingFileHandler
 from os.path import join, dirname, abspath
-
-log_dir = join(dirname(abspath(__file__)), 'log')
+from settings import LOG_DIR
 
 def gen_logger(filename, filemode):
     format = '[%(filename)s:%(lineno)d %(asctime)s] %(levelname)s %(message)s'
     filename = filename.rsplit('.', 1)[0]
     filename = '.'.join([filename, 'log'])
-    filename = join(log_dir, filename)
+    filename = join(LOG_DIR, filename)
     logging.basicConfig(
         level=logging.DEBUG,
         filename=filename,
@@ -48,12 +47,3 @@ def pagination(seq, page, page_size):
                 previous_page=previous_page,
                 next_page=next_page,
                 is_empty=is_empty)
-
-class Success(object):
-    def __init__(self, url, value):
-        self.url = url
-        self.value = value
-
-class Failure(object):
-    def __init__(self, url):
-        self.url = url

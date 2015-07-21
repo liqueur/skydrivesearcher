@@ -111,7 +111,14 @@
       <ul id="result-list" class="list-unstyled" style="padding-left:100px;padding-bottom:20px;">
         <li ng-repeat="item in paging.objects">
           <h4><a href="{$ item.url $}" target="_blank" ng-bind-html="item.title|safe"></a></h4>
-          <span class="" style="color:#ccc">{$ item.time $}</span>
+          <span class="" style="color:#666">
+            <b>分享时间: </b>span{$ item.feed_time $}
+            <b>文件大小: </b>{$ item.size $}
+            <b>浏览次数: </b>{$ item.v_cnt $}
+            <b>下载次数: </b>{$ item.d_cnt $}
+            <b>保存次数: </b>{$ item.t_cnt $}
+          </span>
+          <p class="text-success" style="padding-top:10px;">{$ item.url $}</p>
         </li>
         <li ng-show="paging.is_empty">
           <h4 style="color:#333">Σ( ° △ °|||)︴没有找到资源</h4>
@@ -202,7 +209,6 @@
           success(function(ret, status, headers, config){
           $scope.status = "result";
           $scope.cost_time = ret.cost_time;
-          $scope.data_time = ret.data_time;
           $scope.total_count = ret.total_count;
           $scope.paging = ret.paging;
           btnLoading(".search-btn", false);

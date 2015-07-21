@@ -10,6 +10,7 @@ from lucene import *
 from settings import *
 from tools import gen_logger, pagination
 from functools import wraps
+from IPython import embed
 
 logger = gen_logger(__file__, 'w')
 SEARCHER = IndexSearcher(INDEX_DIR)
@@ -20,7 +21,6 @@ def traffic_counter(func):
     '''
     @wraps(func)
     def wrapper(*args, **kwargs):
-        db.monitor.update({}, {'$inc':{'traffic':1}}, True)
         return func(*args, **kwargs)
     return wrapper
 
@@ -28,7 +28,6 @@ class IndexHandler(tornado.web.RequestHandler):
     '''
     :desc:首页
     '''
-    @traffic_counter
     def get(self):
         self.render('index.html')
 
@@ -36,7 +35,6 @@ class SearchHandler(tornado.web.RequestHandler):
     '''
     :desc:搜索
     '''
-    @traffic_counter
     @tornado.web.asynchronous
     def get(self):
         # 转义字符前加上\
@@ -62,33 +60,42 @@ class SearchHandler(tornado.web.RequestHandler):
             # 符合条件的资源数量
             total_count = len(total_hits.scoreDocs)
 
-            t1 = time()
-
             # 对搜索结果进行高亮和封装
             # 对搜索结果分页
             paging = pagination(total_hits.scoreDocs, page, RESULT_PAGE_SIZE)
 
+            def unit(size):
+                if size == 0:
+                    return '未知'
+                elif size >= 1024 ** 3:
+                    return '%.1f G' % (size / 1024 ** 3,)
+                elif size >= 1024 ** 2:
+                    return '%.1f M' % (size / 1024 ** 2,)
+                else:
+                    return '%.1f K' % (size / 1024,)
+
             def wrap(hit):
-                doc= SEARCHER.doc(hit.doc)
+                doc = SEARCHER.doc(hit.doc)
                 title = doc.get('title')
                 stream = TokenSources.getAnyTokenStream(SEARCHER.getIndexReader(), hit.doc, 'title', doc, ANALYZER)
                 title = highlighter.getBestFragment(stream, title)
-                url = doc.get('url')
-                ctime = int(doc.get('time'))
+                feed_time = int(doc.get('feed_time'))
                 item = dict(
                     title=title,
-                    url=url,
-                    time=strftime('%Y-%m-%d %H:%M:%S', localtime(ctime))
+                    url=doc.get('url'),
+                    size=unit(float(doc.get('size'))),
+                    v_cnt=doc.get('v_cnt'),
+                    d_cnt=doc.get('d_cnt'),
+                    t_cnt=doc.get('t_cnt'),
+                    origin=doc.get('origin'),
+                    feed_time=strftime('%Y-%m-%d %H:%M:%S', localtime(feed_time)),
                 )
                 return item
 
             paging['objects'] = map(wrap, paging['objects'])
 
-            data_time = '%.3f 秒' % ((time() - t1),)
-
             kwargs = dict(
                 cost_time=cost_time,
-                data_time=data_time,
                 paging=paging,
                 total_count=total_count,
             )
@@ -96,66 +103,66 @@ class SearchHandler(tornado.web.RequestHandler):
             self.write(json.dumps(kwargs))
             self.finish()
 
-class OverlookHandler(tornado.web.RequestHandler):
-    def get(self):
-        self.render('dashboard.html')
+# class OverlookHandler(tornado.web.RequestHandler):
+    # def get(self):
+        # self.render('dashboard.html')
 
-class OverlookChartHandler(tornado.web.RequestHandler):
-    def get(self):
-        chartname = self.get_argument('chartname', None)
-        log = {
-            'user': list(db.user_log.find()),
-            'resource': list(db.resource_log.find()),
-            'traffic': list(db.traffic_log.find()),
-        }.get(chartname, None)
-        if log is None: self.send_error(400)
+# class OverlookChartHandler(tornado.web.RequestHandler):
+    # def get(self):
+        # chartname = self.get_argument('chartname', None)
+        # log = {
+            # 'user': list(db.user_log.find()),
+            # 'resource': list(db.resource_log.find()),
+            # 'traffic': list(db.traffic_log.find()),
+        # }.get(chartname, None)
+        # if log is None: self.send_error(400)
 
-        def gen_time(ctime):
-            return strftime('%H:%M', localtime(ctime))
+        # def gen_time(ctime):
+            # return strftime('%H:%M', localtime(ctime))
 
-        if len(log) <= LOG_LIMIT:
-            ctime_list = [gen_time(x['ctime']) for x in log]
-            count_list = [x['count'] for x in log]
-        else:
-            log = log[len(log) - LOG_LIMIT:]
-            ctime_list = [gen_time(x['ctime']) for x in log]
-            count_list = [x['count'] for x in log]
+        # if len(log) <= LOG_LIMIT:
+            # ctime_list = [gen_time(x['ctime']) for x in log]
+            # count_list = [x['count'] for x in log]
+        # else:
+            # log = log[len(log) - LOG_LIMIT:]
+            # ctime_list = [gen_time(x['ctime']) for x in log]
+            # count_list = [x['count'] for x in log]
 
-        data = dict(
-            ctime_list=ctime_list,
-            count_list=count_list,
-        )
+        # data = dict(
+            # ctime_list=ctime_list,
+            # count_list=count_list,
+        # )
 
-        self.write(json.dumps(data))
+        # self.write(json.dumps(data))
 
-class OverlookCSVHandler(tornado.web.RequestHandler):
-    @tornado.web.asynchronous
-    def get(self):
-        csvname = self.get_argument('csvname', None)
-        csvinfo = {
-            'user':[db.user_log, 'user.log.{}.csv'],
-            'resource':[db.resource_log, 'resource.log.{}.csv'],
-            'traffic':[db.traffic_log, 'traffic.log.{}.csv'],
-        }.get(csvname, None)
-        if csvinfo is None: self.send_error(400)
+# class OverlookCSVHandler(tornado.web.RequestHandler):
+    # @tornado.web.asynchronous
+    # def get(self):
+        # csvname = self.get_argument('csvname', None)
+        # csvinfo = {
+            # 'user':[db.user_log, 'user.log.{}.csv'],
+            # 'resource':[db.resource_log, 'resource.log.{}.csv'],
+            # 'traffic':[db.traffic_log, 'traffic.log.{}.csv'],
+        # }.get(csvname, None)
+        # if csvinfo is None: self.send_error(400)
 
-        self.set_header('Content-Type', 'application/octet-stream')
-        self.set_header('Content-Disposition', 'attachment;filename=' + csvinfo[1].format(int(time())))
+        # self.set_header('Content-Type', 'application/octet-stream')
+        # self.set_header('Content-Disposition', 'attachment;filename=' + csvinfo[1].format(int(time())))
 
-        def gen_line(item):
-            _ctime = strftime('%Y-%m-%d %H:%M', localtime(item['ctime']))
-            count = item['count']
-            return '{ctime},{count}\n'.format(ctime=_ctime, count=count)
+        # def gen_line(item):
+            # _ctime = strftime('%Y-%m-%d %H:%M', localtime(item['ctime']))
+            # count = item['count']
+            # return '{ctime},{count}\n'.format(ctime=_ctime, count=count)
 
-        def yield_line(collection):
-            for item in collection.find():
-                yield gen_line(item)
+        # def yield_line(collection):
+            # for item in collection.find():
+                # yield gen_line(item)
 
-        self.write('ctime,count\n')
-        for line in yield_line(csvinfo[0]):
-            self.write(line)
+        # self.write('ctime,count\n')
+        # for line in yield_line(csvinfo[0]):
+            # self.write(line)
 
-        self.finish()
+        # self.finish()
 
 class IndexHandler(tornado.web.RequestHandler):
     def get(self):
@@ -164,19 +171,16 @@ class IndexHandler(tornado.web.RequestHandler):
 class IndexInfoHandler(tornado.web.RequestHandler):
     @tornado.web.asynchronous
     def get(self):
-        resource_count = db.resource.count()
-        # last_indexing = db.indexing_log.find().sort({_id:-1}).limit(1)['ctime']
-        # last_indexing=strftime('%Y-%m-%d %H:%M:%S', localtime(last_indexing))
+        resource_count = db.get('select count(*) as count from resource')['count']
         data = dict(
             resource_count=resource_count,
-            # last_indexing=last_indexing,
         )
         self.write(json.dumps(data))
         self.finish()
 
-class DonateHandler(tornado.web.RequestHandler):
-    def get(self):
-        self.render('donate.html')
+# class DonateHandler(tornado.web.RequestHandler):
+    # def get(self):
+        # self.render('donate.html')
 
 # class TestChineseHandler(tornado.web.RequestHandler):
     # def post(self):
@@ -211,12 +215,12 @@ application = tornado.web.Application([
     (r'/', IndexHandler),
     # (r'/testchinese', TestChineseHandler),
     (r'/info', IndexInfoHandler),
-    (r'/donate', DonateHandler),
+    # (r'/donate', DonateHandler),
     (r'/search', SearchHandler),
-    (r'/admin', OverlookHandler),
-    (r'/admin/overlook', OverlookHandler),
-    (r'/admin/overlook/chart', OverlookChartHandler),
-    (r'/admin/overlook/csv', OverlookCSVHandler),
+    # (r'/admin', OverlookHandler),
+    # (r'/admin/overlook', OverlookHandler),
+    # (r'/admin/overlook/chart', OverlookChartHandler),
+    # (r'/admin/overlook/csv', OverlookCSVHandler),
 ], **settings)
 
 if __name__ == '__main__':
