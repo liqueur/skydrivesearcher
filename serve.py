@@ -171,7 +171,7 @@ class IndexHandler(tornado.web.RequestHandler):
 class IndexInfoHandler(tornado.web.RequestHandler):
     @tornado.web.asynchronous
     def get(self):
-        resource_count = db.get('select count(*) as count from resource')['count']
+        resource_count = db.get('select count from index_log order by id desc')['count']
         data = dict(
             resource_count=resource_count,
         )

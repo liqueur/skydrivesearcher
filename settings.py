@@ -2,15 +2,17 @@
 
 import lucene
 import torndb
+import MySQLdb
 from lucene import *
 from os.path import join, abspath, dirname
 
 initVM()
 
 db = torndb.Connection('localhost:3306', 'sds', user='root', password='britten')
+# db = MySQLdb.connect('localhost', 'root', 'britten', 'sds')
 
 RESULT_PAGE_SIZE = 20
-RESULT_MAX_NUM = 10000
+RESULT_MAX_NUM = 5000
 
 TEST_CHINESE_CONTENT = '''
 中华人民共和国
